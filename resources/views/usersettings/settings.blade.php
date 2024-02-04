@@ -179,7 +179,7 @@
                 <small class="fw-bold">{{ __('step 1.') }}</small> {{ __('Scan the code below in the Google Authenticator app ') }}
                         @if(session('QRImage'))
                             <div class="text-center mb-3">
-                                {!! html_entity_decode(session('QRImage')) !!}
+                                <img src="{!! html_entity_decode(session('QRImage')) !!}">
                             </div>
                         @endif
                     <div class="mb-3">
