@@ -36,5 +36,12 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+        
+        // Zablokuj ścieżkę rejestracji
+            if (env('REGISTRATION_OPEN', false) == false) {
+                Route::any('/register', function() {
+                    abort(404); // Możesz też przekierować gdzie indziej
+                });
+            }
     }
 }
