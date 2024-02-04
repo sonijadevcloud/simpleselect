@@ -15,8 +15,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/styles.css'])
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
