@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\Hash;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
+use App\Models\User;
+use App\Models\Role;
+
 
 class UserController extends Controller
 {
@@ -118,6 +121,94 @@ class UserController extends Controller
         return redirect()->route('settings')->with('success', '2FA has been disabled.');
     }
 
+    // Metoda wyświetlająca listę użytkowników
+    public function index()
+    {
+        $roles = Role::all(); // Załóżmy, że masz model Role
+        $users = User::paginate(5);
+        return view('admin.users.index', compact('users'), compact('roles'));
+    }
+
+    // Metoda wyświetlająca formularz dodawania nowego użytkownika
+    public function create()
+    {
+        // return view('admin.users.create');
+    }
+
+    // Metoda obsługująca dodawanie nowego użytkownika
+    public function store(Request $request)
+    {
+        // Walidacja danych wejściowych
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:20',
+            'password' => 'required|string|min:8|confirmed|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/',
+            'role' => 'required',
+        ]);
+
+        // Zapis nowego użytkownika
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->role_id = $request->role;
+        $user->save();
+
+        // Przekierowanie po zakończeniu
+        return redirect()->route('users.index')->with('success', 'User has been created successfully.');
+    }
+
+    // Metoda wyświetlająca formularz edycji użytkownika
+    public function edit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    // Metoda obsługująca aktualizację danych użytkownika
+    public function update(Request $request, User $user)
+    {
+        if ($request->has('password')) {
+            // Walidacja nowego hasła
+            $request->validate([
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'confirmed',
+                    'regex:/[a-z]/',
+                    'regex:/[A-Z]/',
+                    'regex:/[0-9]/',
+                    'regex:/[@$!%*#?&]/',
+                ],
+            ]);
+    
+            // Aktualizacja hasła
+            $user->password = Hash::make($request->password);
+        } else {
+            // Aktualizacja innych danych użytkownika
+            $user->fill($request->except('password'));
+        }
+    
+        try {
+            $user->save();
+            return redirect()->route('users.index')->with('success', 'User information updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'There was an error editing the user.');
+        }
+    }
+
+    // Metoda obsługująca usuwanie użytkownika
+    public function destroy(User $user)
+    {
+        try {
+            $user->delete();
+            return redirect()->route('users.index')->with('success', 'User successfully removed.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'An error occurred while deleting a user.');
+        }
+    }
 
 
 }

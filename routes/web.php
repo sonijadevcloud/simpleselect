@@ -19,7 +19,11 @@ use App\Http\Controllers\RoleController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::check()) {
+        return redirect('/home'); // Jeśli użytkownik jest zalogowany, przekieruj go do /home
+    } else {
+        return view('auth.login'); // Jeśli użytkownik nie jest zalogowany, zwróć widok logowania
+    }
 });
 
 Auth::routes();
@@ -40,4 +44,8 @@ Route::post('/2fa', [TwoFactorController::class, 'verify'])->name('2fa.verify');
 // ADMIN ROUTES
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('roles', RoleController::class);
+});
+
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::resource('users', UserController::class);
 });

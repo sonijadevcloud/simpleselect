@@ -21,7 +21,7 @@
                     @endif
                         <div class="row">
                             <div class="col-md-6">
-                                <h2 class="fw-bold lh-1">{{ __('Privilege management') }}</h3>
+                                <h2 class="fw-bold lh-1"><i class="bi bi-file-earmark-lock"></i> {{ __('Privilege management') }}</h3>
                                 <h6 class="lh-1">{{ __('Here you can manage roles and permissions in the system') }}</h6>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end align-items-center">
@@ -95,11 +95,11 @@
         <form action="{{ route('roles.store') }}" method="POST" id="addRoleForm">
         @csrf
       <div class="mb-3">
-        <label for="name" class="form-label">Role name</label>
-        <input type="text" class="form-control" id="name" name="name">
+        <label for="name" class="form-label">{{ __('Role name') }}</label>
+        <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="mb-3">
-        <label for="description" class="form-label">Role description</label>
+        <label for="description" class="form-label">{{ __('Role description') }}</label>
         <textarea class="form-control" id="description" name="description" rows="2"></textarea>
         </div>
       </div>
@@ -127,11 +127,11 @@
                 @csrf
                 @method('PUT')
             <div class="mb-3">
-                <label for="name" class="form-label">Role name</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ $role->name }}">
+                <label for="name" class="form-label">{{ __('Role name') }}</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ $role->name }}" required>
                 </div>
                 <div class="mb-3">
-                <label for="description" class="form-label">Role description</label>
+                <label for="description" class="form-label">{{ __('Role description') }}</label>
                 <textarea class="form-control" id="description" name="description" rows="2">{{ $role->description }}</textarea>
                 </div>
             </div>

@@ -26,16 +26,16 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white">
             <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
                                   <div class="logo" id="logo">
-                                      <span class="sonija"><i class="bi bi-ticket-detailed logson"></i> Sonija</span>
+                                      <span class="sonija"><i class="bi bi-p-square-fill sonijaicon"></i> Sonija</span>
                                       <span class="simple">SIMPLE</span>
                                       <!-- <img class="devlogo" src="/img/devLOGO.png" id="devlogo"> -->
-                                      <span class="ticket" id="cloud">Ticket</span>
+                                      <span class="ticket" id="cloud">Select</span>
                                       
-                                      <div class="future">our support, your success</div>
+                                      <div class="future">your parking sentinel</div>
                                   </div>
                               </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -64,12 +64,8 @@
                                     <i class="bi bi-person-circle" style="font-size: 1.3rem;"></i>
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item disabled">{{ __('👋 Hello! ') }}{{ Auth::user()->name }}</a>
-                                    <a class="dropdown-item" href="{{ route('home') }}">
-                                                     <i class="bi bi-grid-1x2"></i>
-                                        {{ __('Dashboard') }}
-                                    </a>
+                                <div class="dropdown-menu dropdown-menu-end  z-3" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item disabled">{{ __('👋 Hello! ') }}{{ Auth::user()->name }}</a><br>
                                     <a class="dropdown-item" href="{{ route('settings') }}">
                                                      <i class="bi bi-sliders"></i>
                                         {{ __('User Settings') }}
@@ -86,11 +82,64 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
+                            @endguest
                     </ul>
                 </div>
             </div>
+            <hr>
         </nav>
+        @guest
+            @if (Route::has('login'))
+            
+            @endif
+            @else
+        <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary navbar-light bg-white shadow-sm z-2">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item px-2">
+                <a class="nav-link nvlss {{ Route::currentRouteName() == 'home' ? 'nvactive' : '' }}" href="{{ route('home') }}"><i class="bi bi-house"></i> {{ __('Home')}}</a>
+                </li>
+                <li class="nav-item px-2">
+                <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }}" href="#"><i class="bi bi-receipt"></i> {{ __('Notices')}}</a>
+                </li>
+                <li class="nav-item px-2">
+                <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }}" href="#"><i class="bi bi-suit-heart"></i> {{ __('Subscriptions')}}</a>
+                </li>
+                <li class="nav-item px-2">
+                <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }}" href="#"><i class="bi bi-bank"></i> {{ __('Enforcement')}}</a>
+                </li>
+                <li class="nav-item px-2 dropdown">
+                    <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-p-circle"></i> {{ __('PPZ Settings')}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear-wide-connected"></i> {{ __('Main settings')}}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> {{ __('Dictionaries')}}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-phone-vibrate"></i> {{ __('Control settings')}}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i> {{ __('Integration settings')}}</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item px-2 dropdown">
+                    <a class="nav-link nvlss {{ Request::is('admin*') ? 'nvactive' : '' }} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-fingerprint"></i> {{ __('Administration')}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-sliders2-vertical"></i> {{ __('System settings')}}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('users.index') }}"><i class="bi bi-people"></i> {{ __('Users management')}}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('roles.index') }}"><i class="bi bi-file-earmark-lock"></i> {{ __('Privilege management')}}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i> {{ __('Integration management')}}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-shield-lock"></i> {{ __('Security settings')}}</a></li>
+                    </ul>
+                </li>
+            </ul>
+            </div>
+        </div>
+        </nav>
+        @endguest
 
         <main class="py-4">
             @yield('content')

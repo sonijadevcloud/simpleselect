@@ -50,6 +50,11 @@ body{background-image: url('https://sonija.cloud//img/bgtest.png')!important; ba
 .logo:hover .simple {
   opacity: 1;
 }
+.sonijaicon{transition: 0.2s;}
+.logo:hover .sonijaicon{
+  color: #198754;
+  transition: 0.2s;
+}
 
 .nlh {
   transition: 0.3s;
@@ -90,7 +95,8 @@ body{background-image: url('https://sonija.cloud//img/bgtest.png')!important; ba
 
 .asbr{background-color: #e4e4e4;}
 
-
-
+.nvlss{transition: 0.2s!important; font-weight: 600; border-bottom: 1px solid transparent;}
+.nvlss:hover{transition: 0.2s!important; color: #198754!important; border-bottom: 1px solid #198754;}
+.nvactive{font-weight: bolder!important; color: #198754!important; border-bottom: 1px solid #198754;}
 
 footer{width: 100%; min-height: 2vh; padding: 10px; display: flex; justify-content: center; align-items: center; margin-top: 5%; color: #a8a8a8; flex-direction: column; line-height: 10px;}
