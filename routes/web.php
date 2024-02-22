@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TwoFactorController;
-use App\Http\Controllers\RoleController;
 
 
 
@@ -42,9 +41,6 @@ Route::post('/2fa', [TwoFactorController::class, 'verify'])->name('2fa.verify');
 
 
 // ADMIN ROUTES
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::resource('roles', RoleController::class);
-});
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('users', UserController::class);

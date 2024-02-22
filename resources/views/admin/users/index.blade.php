@@ -38,6 +38,7 @@
                                         <th scope="col">{{ __('Phone') }}</th>
                                         <th scope="col">{{ __('Created at') }}</th>
                                         <th scope="col">{{ __('Updated at') }}</th>
+                                        <th scope="col">{{ __('Status') }}</th>
                                         <th scope="col">{{ __('Actions') }}</th>
                                         </tr>
                                     </thead>
@@ -51,6 +52,16 @@
                                         <td>{{ $user->created_at }}</td>
                                         <td>{{ $user->updated_at }}</td>
                                         <td class="text-center">
+                                            @if($user->user_status == 'active')
+                                                <span class="badge text-bg-success">{{ __('active') }}</span>
+                                            @elseif($user->user_status == 'notactive')
+                                                <span class="badge text-bg-dark">{{ __('notactive') }}</span>
+                                            @elseif($user->user_status == 'blocked')
+                                                <span class="badge text-bg-danger">{{ __('blocked') }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            @if($user->id !== Auth::id())
                                             <!-- Przycisk do edycji usera -->
                                             <button class="btn btn-sm btn-secondary" title="{{ __('Edit user`s information') }}" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}">
                                                 <i class="bi bi-pencil-square"></i>
@@ -61,11 +72,18 @@
                                                 <i class="bi bi-key"></i>
                                             </button>
 
-                                            <!-- Przycisk do usuwania usera -->
-                                            @if($user->id !== Auth::id())
-                                                <button class="btn btn-sm btn-danger" title="{{ __('Delete this user') }}" data-bs-toggle="modal" data-bs-target="#deleteUserModal-{{ $user->id }}">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                </button>
+                                            <!-- Przycisk do włączania/wyłączania usera -->
+                                                @if($user->user_status == 'active')
+                                                    <button class="btn btn-sm btn-danger" title="{{ __('Turn off this user') }}" data-bs-toggle="modal" data-bs-target="#turnoffUserModal-{{ $user->id }}">
+                                                        <i class="bi bi-power"></i>
+                                                    </button>
+                                                @elseif($user->user_status == 'notactive')
+                                                    <button class="btn btn-sm btn-success" title="{{ __('Turn on this user') }}" data-bs-toggle="modal" data-bs-target="#turnonUserModal-{{ $user->id }}">
+                                                        <i class="bi bi-power"></i>
+                                                    </button>
+                                                @endif
+                                            @else
+                                            <span title="{{ __('If you want to edit your own account information or make password changes - use the user settings for your account or ask another administrator to do it.') }}">{{ __('No actions available') }}</span>
                                             @endif
                                         </td>
                                         </tr>
@@ -112,14 +130,6 @@
         <label for="phone" class="form-label">{{ __('Phone number') }}</label><br><small>{{ __('Format: 123123123') }}</small>
         <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{9}">
         </div>
-            <div class="mb-3">
-                <label for="role" class="form-label">{{ __('Role') }}</label>
-                <select name="role" class="form-select" id="role" required>
-                    @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                    @endforeach
-                </select>
-                </div>
         <div class="mb-3">
         <label for="password" class="form-label">{{ __('Password') }}</label>
         <input type="password" class="form-control" id="password" name="password">
@@ -171,14 +181,6 @@
                 <label for="phonae" class="form-label">{{ __('Phone number') }}</label><br><small>{{ __('Format: 123123123') }}</small>
                 <input type="tel" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" pattern="[0-9]{9}" required>
                 </div>
-            <div class="mb-3">
-                <label for="role" class="form-label">{{ __('Role') }}</label>
-                <select name="role_id" class="form-select" id="role" required>
-                    @foreach($roles as $role)
-                    <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
-                    @endforeach
-                </select>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
@@ -227,35 +229,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                 <button type="submit" form="editUserPwForm-{{ $user->id }}" class="btn btn-warning"><i class="bi bi-key"></i> {{ __('Set new passowrd') }}</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-
-
-<!-- ----- -->
-
-
-<!-- MODALS FOR DELETING USERS -->
-@foreach($users as $user)
-<div class="modal fade" id="deleteUserModal-{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel-{{ $user->id }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ __('Delete user ID-') }}{{ $user->id }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {{ __('Are you sure you want to delete user ') }} <b>{{ $user->name }}</b> {{ __(' from the system?')}}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="deleteUserForm">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i> {{ __('Yes, delete this user') }}</button>
                 </form>
             </div>
         </div>
@@ -442,8 +415,57 @@
 </script>
 @endforeach
 
+<!-- MODALS FOR TURNING OFF USERS -->
+@foreach($users as $user)
+<div class="modal fade" id="turnoffUserModal-{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="turnoffUserModalLabel-{{ $user->id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('Turn off user ID#') }}{{ $user->id }} {{ __(' account') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ __('Are you sure you want to turn off user ') }} <b>{{ $user->name }}</b> {{ __(' account in system?')}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <form action="{{ route('users.update', $user->id) }}" method="POST" class="turnoffUserForm">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="user_status" value="notactive">
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-power"></i> {{ __('Yes, turn off') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
-<!-- ----- -->
+<!-- MODALS FOR TURNING ON USERS -->
+@foreach($users as $user)
+<div class="modal fade" id="turnonUserModal-{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="turnonUserModalLabel-{{ $user->id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('Turn on user ID#') }}{{ $user->id }} {{ __(' account') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ __('Are you sure you want to turn on user ') }} <b>{{ $user->name }}</b> {{ __(' account in system?')}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <form action="{{ route('users.update', $user->id) }}" method="POST" class="turnonUserForm">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="user_status" value="active">
+                    <button type="submit" class="btn btn-success"><i class="bi bi-power"></i> {{ __('Yes, turn on') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 
 @endsection

@@ -27,7 +27,7 @@ class User extends Authenticatable
         'position', 
         'two_factor_enabled', 
         'signature',
-        'role_id',
+        'user_status',
     ];
 
     /**
@@ -50,8 +50,4 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
 }

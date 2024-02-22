@@ -7,7 +7,6 @@ use Auth;
 use Illuminate\Support\Facades\Hash;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 use App\Models\User;
-use App\Models\Role;
 
 
 class UserController extends Controller
@@ -124,9 +123,8 @@ class UserController extends Controller
     // Metoda wyświetlająca listę użytkowników
     public function index()
     {
-        $roles = Role::all(); // Załóżmy, że masz model Role
         $users = User::paginate(5);
-        return view('admin.users.index', compact('users'), compact('roles'));
+        return view('admin.users.index', compact('users'));
     }
 
     // Metoda wyświetlająca formularz dodawania nowego użytkownika
@@ -144,7 +142,6 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:8|confirmed|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/',
-            'role' => 'required',
         ]);
 
         // Zapis nowego użytkownika
@@ -153,7 +150,6 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->password = Hash::make($request->password);
-        $user->role_id = $request->role;
         $user->save();
 
         // Przekierowanie po zakończeniu
@@ -168,46 +164,65 @@ class UserController extends Controller
 
     // Metoda obsługująca aktualizację danych użytkownika
     public function update(Request $request, User $user)
-    {
-        if ($request->has('password')) {
-            // Walidacja nowego hasła
-            $request->validate([
-                'password' => [
-                    'required',
-                    'string',
-                    'min:8',
-                    'confirmed',
-                    'regex:/[a-z]/',
-                    'regex:/[A-Z]/',
-                    'regex:/[0-9]/',
-                    'regex:/[@$!%*#?&]/',
-                ],
-            ]);
-    
-            // Aktualizacja hasła
-            $user->password = Hash::make($request->password);
-        } else {
-            // Aktualizacja innych danych użytkownika
-            $user->fill($request->except('password'));
+{
+    if ($request->has('user_status')) {
+        // Jeśli przekazano nowy status użytkownika, zaktualizuj go
+        $oldStatus = $user->user_status;
+        $user->user_status = $request->user_status;
+
+        try {
+            $user->save();
+            $message = $request->user_status == 'active' ? 'User account successfully enabled.' : 'User account successfully disabled.';
+            return redirect()->route('users.index')->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'There was an error updating the user status.');
         }
-    
+    } elseif ($request->has('password')) {
+        // Walidacja nowego hasła
+        $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*#?&]/',
+            ],
+        ]);
+
+        // Aktualizacja hasła
+        $user->password = Hash::make($request->password);
+
         try {
             $user->save();
             return redirect()->route('users.index')->with('success', 'User information updated successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('users.index')->with('error', 'There was an error editing the user.');
+            return redirect()->route('users.index')->with('error', 'There was an error updating the user password.');
+        }
+    } else {
+        // Aktualizacja innych danych użytkownika
+        $user->fill($request->except('password'));
+
+        try {
+            $user->save();
+            return redirect()->route('users.index')->with('success', 'User information updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'There was an error updating the user information.');
         }
     }
+}
 
     // Metoda obsługująca usuwanie użytkownika
     public function destroy(User $user)
     {
-        try {
-            $user->delete();
-            return redirect()->route('users.index')->with('success', 'User successfully removed.');
-        } catch (\Exception $e) {
-            return redirect()->route('users.index')->with('error', 'An error occurred while deleting a user.');
-        }
+        // try {
+        //     $user->delete();
+        //     return redirect()->route('users.index')->with('success', 'User successfully removed.');
+        // } catch (\Exception $e) {
+        //     return redirect()->route('users.index')->with('error', 'An error occurred while deleting a user.');
+        // } // ZABLOKOWANE NA RZECZ WŁĄCZANIA I WYŁĄCZANIA KONT USERÓW
     }
 
 

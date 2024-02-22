@@ -130,7 +130,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#"><i class="bi bi-sliders2-vertical"></i> {{ __('System settings')}}</a></li>
                         <li><a class="dropdown-item" href="{{ route('users.index') }}"><i class="bi bi-people"></i> {{ __('Users management')}}</a></li>
-                        <li><a class="dropdown-item" href="{{ route('roles.index') }}"><i class="bi bi-file-earmark-lock"></i> {{ __('Privilege management')}}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-lock"></i> {{ __('Privilege management')}}</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i> {{ __('Integration management')}}</a></li>
                         <li><a class="dropdown-item" href="#"><i class="bi bi-shield-lock"></i> {{ __('Security settings')}}</a></li>
                     </ul>
