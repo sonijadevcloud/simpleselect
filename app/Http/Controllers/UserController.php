@@ -7,6 +7,10 @@ use Auth;
 use Illuminate\Support\Facades\Hash;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 use App\Models\User;
+use Silber\Bouncer\Database\Ability;
+use Silber\Bouncer\Database\Role;
+use Silber\Bouncer\BouncerFacade as Bouncer;
+
 
 
 class UserController extends Controller
@@ -57,7 +61,7 @@ class UserController extends Controller
         $user->signature = $request->signature;
         $user->save();
 
-        return back()->with('success', 'Settings have been updated.');
+        return back()->with('success', 'Settings have been updated. ');
     }
 
     public function changePassword(Request $request)
@@ -124,7 +128,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::paginate(5);
-        return view('admin.users.index', compact('users'));
+        $roles = Role::all(); // Pobierz wszystkie role
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     // Metoda wyświetlająca formularz dodawania nowego użytkownika
@@ -204,6 +209,28 @@ class UserController extends Controller
     } else {
         // Aktualizacja innych danych użytkownika
         $user->fill($request->except('password'));
+
+        // Przypisanie użytkownika do roli
+        $roleId = $request->input('role_id');
+
+        // Sprawdzenie czy wybrano nową rolę
+        if ($roleId !== null) {
+            // Sprawdź czy rola nie jest pusta
+            if ($roleId != 'no-role') {
+                // Jeśli rola została wybrana, przypisz użytkownika do tej roli
+                $role = Role::find($roleId);
+                if ($role) {
+                    Bouncer::assign($role)->to($user);
+                    $user->save();
+                }
+            } else {
+                // Jeśli wybrano pustą rolę, usuń wszystkie role użytkownika
+                $assignedRoles = $user->getRoles(); // Pobierz przypisane role użytkownika
+                foreach ($assignedRoles as $assignedRole) {
+                    Bouncer::retract($assignedRole)->from($user); // Wycofaj każdą rolę
+                }
+            }
+        }
 
         try {
             $user->save();

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -31,5 +32,27 @@ class LoginController extends Controller
 
         // Kontynuuj standardowe przekierowanie po zalogowaniu
         return redirect()->intended($this->redirectPath());
+    }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $status = trans('auth.failed');
+        $user = Auth::getLastAttempted();
+
+        if ($user && ($user->user_status !== 'active')) {
+            $status = 'Your account is disabled or blocked. Contact the administrator.';
+        }
+
+        throw ValidationException::withMessages([
+            $this->username() => [$status],
+        ]);
+    }
+
+    protected function attemptLogin(Request $request)
+    {
+        // Próba logowania z podanymi danymi
+        $credentials = $this->credentials($request);
+        $credentials['user_status'] = 'active'; // Dodajemy warunek sprawdzający status użytkownika
+        return Auth::attempt($credentials, $request->filled('remember'));
     }
 }

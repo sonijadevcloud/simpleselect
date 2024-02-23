@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TwoFactorController;
+use App\Http\Controllers\AdminPermissionController;
 
 
 
@@ -44,4 +45,17 @@ Route::post('/2fa', [TwoFactorController::class, 'verify'])->name('2fa.verify');
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
+    Route::get('permissions', [AdminPermissionController::class, 'index'])->name('permissions.index');
+    Route::post('permissions', [AdminPermissionController::class, 'storePermission'])->name('permissions.store');
+    // Route::get('permissions/create', [AdminPermissionController::class, 'createPermissionForm'])->name('permissions.create');
+    // Route::get('permissions/{permission}', [AdminPermissionController::class, 'show'])->name('permissions.show');
+    // Route::get('permissions/{permission}/edit', [AdminPermissionController::class, 'edit'])->name('permissions.edit');
+    Route::put('permissions/{permission}/update', [AdminPermissionController::class, 'updatePermission'])->name('permissions.update');
+    Route::delete('permissions/{permission}', [AdminPermissionController::class, 'destroyPermission'])->name('permissions.destroy');
+    // Route::get('roles/create', [AdminPermissionController::class, 'createRoleForm'])->name('roles.create');
+    Route::post('roles/store', [AdminPermissionController::class, 'storeRole'])->name('roles.store');
+    Route::delete('roles/{role}', [AdminPermissionController::class, 'destroyRole'])->name('roles.destroy');
+    Route::put('roles/{role}/update', [AdminPermissionController::class, 'updateRole'])->name('roles.update');
 });
+
+

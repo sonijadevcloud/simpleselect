@@ -117,10 +117,10 @@
                         <i class="bi bi-p-circle"></i> {{ __('PPZ Settings')}}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear-wide-connected"></i> {{ __('Main settings')}}</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i> {{ __('Dictionaries')}}</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-phone-vibrate"></i> {{ __('Control settings')}}</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i> {{ __('Integration settings')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-gear-wide-connected"></i> {{ __('Main settings')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-journal-text"></i> {{ __('Dictionaries')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-phone-vibrate"></i> {{ __('Control settings')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-cpu"></i> {{ __('Integration settings')}}</a></li>
                     </ul>
                 </li>
                 <li class="nav-item px-2 dropdown">
@@ -128,11 +128,11 @@
                         <i class="bi bi-fingerprint"></i> {{ __('Administration')}}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-sliders2-vertical"></i> {{ __('System settings')}}</a></li>
-                        <li><a class="dropdown-item" href="{{ route('users.index') }}"><i class="bi bi-people"></i> {{ __('Users management')}}</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-lock"></i> {{ __('Privilege management')}}</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i> {{ __('Integration management')}}</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-shield-lock"></i> {{ __('Security settings')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-sliders2-vertical"></i> {{ __('System settings')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="{{ route('users.index') }}"><i class="bi bi-people"></i> {{ __('Users management')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="{{ route('permissions.index') }}"><i class="bi bi-file-earmark-lock"></i> {{ __('Privilege management')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-cpu"></i> {{ __('Integration management')}}</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-shield-lock"></i> {{ __('Security settings')}}</a></li>
                     </ul>
                 </li>
             </ul>

@@ -45,7 +45,7 @@
                                     <tbody class="table-group-divider">
                                      @forelse ($users as $index => $user)
                                         <tr>
-                                        <th scope="row">#{{ $users->firstItem() + $index }}</th>
+                                        <th scope="row">{{ $users->firstItem() + $index }}</th>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->phone }}</td>
@@ -89,7 +89,7 @@
                                         </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="5" class="text-center">{{ __('No data in table Roles. Add your first role!') }}</td>
+                                                <td colspan="8" class="text-center">{{ __('No data in table Roles. Add your first role!') }}</td>
                                             </tr>
                                      @endforelse
                                     </tbody>
@@ -162,7 +162,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ __('Edit user ID-') }}{{ $user->id }} - {{ $user->name }}</h5>
+                <h5 class="modal-title">{{ __('Edit user ID#') }}{{ $user->id }} - {{ $user->name }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -180,6 +180,15 @@
             <div class="mb-3">
                 <label for="phonae" class="form-label">{{ __('Phone number') }}</label><br><small>{{ __('Format: 123123123') }}</small>
                 <input type="tel" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" pattern="[0-9]{9}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="role_id" class="form-label">{{ __('Role') }}</label>
+                    <select class="form-select" id="role_id" name="role_id">
+                        <option value="no-role">-- {{ __('Select role') }} --</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}" {{ $user->roles->contains('id', $role->id) ? 'selected' : '' }}>{{ $role->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -421,11 +430,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ __('Turn off user ID#') }}{{ $user->id }} {{ __(' account') }}</h5>
+                <h5 class="modal-title">{{ __('Disable user #') }}{{ $user->id }} {{ __(' account') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{ __('Are you sure you want to turn off user ') }} <b>{{ $user->name }}</b> {{ __(' account in system?')}}
+                {{ __('Are you sure you want to turn off ') }} <b>{{ $user->name }}</b> {{ __(' in system?')}}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
@@ -447,11 +456,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ __('Turn on user ID#') }}{{ $user->id }} {{ __(' account') }}</h5>
+                <h5 class="modal-title">{{ __('Enable user #') }}{{ $user->id }} {{ __(' account') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{ __('Are you sure you want to turn on user ') }} <b>{{ $user->name }}</b> {{ __(' account in system?')}}
+                {{ __('Are you sure you want to turn on ') }} <b>{{ $user->name }}</b> {{ __(' in system?')}}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
