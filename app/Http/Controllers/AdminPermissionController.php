@@ -11,9 +11,9 @@ class AdminPermissionController extends Controller
 {
     public function index()
     {
-        $permissions = Ability::paginate(10);
-        $roles = Role::with('abilities')->paginate(10);
-    
+        $permissions = Ability::all();
+        $roles = Role::with('abilities')->get();
+
         return view('admin.permissions.index', compact('permissions', 'roles'));
     }
 
@@ -102,13 +102,20 @@ class AdminPermissionController extends Controller
         // Pobierz wybrane uprawnienia z formularza
         $selectedPermissions = $request->input('permissions', []);
     
+        // Pobierz obecne uprawnienia roli
+        $currentPermissions = $role->abilities()->pluck('abilities.id')->toArray();
+    
+        // Znajdź uprawnienia, które należy odznaczyć (czyli te, które nie są już wybrane w formularzu)
+        $permissionsToDisallow = array_diff($currentPermissions, $selectedPermissions);
+    
         // Odznacz uprawnienia, które nie są już wybrane w formularzu
-        $role->disallow($role->abilities()->pluck('abilities.id')->diff($selectedPermissions)->all());
+        $role->disallow($permissionsToDisallow);
     
         // Przypisz nowe uprawnienia
-        $role->allow(Ability::whereIn('id', $selectedPermissions)->pluck('id')->all());
+        $role->allow(Ability::whereIn('name', $selectedPermissions)->pluck('name')->all());
     
         return redirect()->route('permissions.index')->with('role_success', 'Role updated successfully.');
     }
+    
 
 }

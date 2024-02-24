@@ -22,14 +22,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h2 class="fw-bold lh-1"><i class="bi bi-diagram-3"></i> {{ __('Permissions management') }}</h3>
-                                <h6 class="lh-1">{{ __('Here you can manage permissions in the system. Permissions are defined types of access and permissions, which are then assigned to a role. For example, the ability to read and write notifications.') }}</h6>
+                                <h6 class="lh-1">{{ __('Here you can manage permissions in the system. Permissions are defined types of access and permissions, which are then assigned to a role. For example, the ability to read and write notifications. Keep in mind that removing permissions can damage the application`s logic and cause your users a lot of problems in their daily work.') }}</h6>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end align-items-center">
                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createPermissionModal"><i class="bi bi-plus-lg"></i> {{ __('Add new permission') }}</button>
                             </div>
                         </div>
                             <div class="table-responsive-sm mt-5">
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped table-hover" id="permissionsTable">
                                     <thead class="table-dark">
                                         <tr>
                                         <th scope="col">#</th>
@@ -43,7 +43,7 @@
                                     <tbody class="table-group-divider">
                                      @forelse ($permissions as $index => $permission)
                                         <tr>
-                                        <th scope="row">#{{ $permissions->firstItem() + $index }}</th>
+                                        <th scope="row">#{{ $index }}</th>
                                         <td>{{ $permission->name }}</td>
                                         <td>{{ $permission->title }}</td>
                                         <td>{{ $permission->created_at }}</td>
@@ -126,11 +126,6 @@
                                      @endforelse
                                     </tbody>
                                 </table>
-                                    <nav aria-label="Page navigation example">
-                                        <ul class="pagination justify-content-center">
-                                            {{ $permissions->links() }}
-                                        </ul>
-                                    </nav>
                             </div>
                 </div>
             </div>
@@ -162,14 +157,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h2 class="fw-bold lh-1"><i class="bi bi-person-fill-lock"></i> {{ __('Roles management') }}</h3>
-                                <h6 class="lh-1">{{ __('Here you can manage roles in the system. A role is a defined group with information on what users assigned to it can do in the application and what accesses they have.') }}</h6>
+                                <h6 class="lh-1">{{ __('Here you can manage roles in the system. A role is a defined group with information on what users assigned to it can do in the application and what accesses they have. Remember to prudently manage roles and the permissions assigned to them. Careless management can corrupt application logic and cause tweoim users a lot of problems while working.') }}</h6>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end align-items-center">
                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createRoleModal"><i class="bi bi-plus-lg"></i> {{ __('Add new role') }}</button>
                             </div>
                         </div>
                             <div class="table-responsive-sm mt-5">
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-bordered table-striped table-hover" id="rolesTable">
                                 <thead class="table-dark">
                                     <tr>
                                         <th scope="col">#</th>
@@ -184,16 +179,19 @@
                                 <tbody class="table-group-divider">
                                     @forelse ($roles as $index => $role)
                                         <tr>
-                                            <th scope="row">#{{ $roles->firstItem() + $index }}</th>
+                                            <th scope="row">#{{ $index }}</th>
                                             <td>{{ $role->name }}</td>
                                             <td>{{ $role->title }}</td>
                                             <td>
-                                                @foreach ($role->abilities as $ability)
+                                                @php
+                                                    $abilitiesCount = $role->abilities->count();
+                                                @endphp
+                                                @foreach ($role->abilities->take(4) as $ability)
                                                     <small><span class="badge text-bg-primary">{{ $ability->name }}</span></small>
-                                                    @if (!$loop->last)
-                                                        ,
-                                                    @endif
                                                 @endforeach
+                                                @if ($abilitiesCount > 4)
+                                                    <small><span class="badge text-bg-secondary">+ {{ $abilitiesCount - 4 . ' more'}}</span></small>
+                                                @endif
                                             </td>
                                             <td>{{ $role->created_at }}</td>
                                             <td>{{ $role->updated_at }}</td>
@@ -201,6 +199,11 @@
                                             <!-- Przycisk do edycji roli -->
                                             <button class="btn btn-sm btn-secondary" title="{{ __('Edit role') }}" data-bs-toggle="modal" data-bs-target="#editRoleModal-{{ $role->id }}">
                                                 <i class="bi bi-pencil-square"></i>
+                                            </button>
+
+                                            <!-- Przycisk do wyświetlenie przypisanych userów -->
+                                            <button class="btn btn-sm btn-primary" title="{{ __('Show assigned users') }}" data-bs-toggle="modal" data-bs-target="#assignedUsersToRoleModal-{{ $role->id }}">
+                                                <i class="bi bi-people-fill"></i>
                                             </button>
 
                                             <!-- Przycisk do usuwania roli -->
@@ -231,11 +234,40 @@
                                                 </div>
                                             </div>
                                             <!-- ############################ -->
+                                            
+
+                                            <!-- Modal przypisanych userów do roli -->
+                                            <div class="modal fade" id="assignedUsersToRoleModal-{{ $role->id }}" tabindex="-1" aria-labelledby="assignedUsersToRoleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">{{ __('Users assigned to the role ' . $role->name) }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body text-start">
+                                                            <p>{{ __('Below is the list of users assigned to the role ( ') }} <b>{{ $role->name }}</b> ) :</p>
+                                                            @if($role->users->isNotEmpty())
+                                                                <ol>
+                                                                    @foreach($role->users as $user)
+                                                                        <li>{{ $user->name }}</li>
+                                                                    @endforeach
+                                                                </ol>
+                                                            @else
+                                                                <p class="text-warning text-center">{{ __('No users assigned to this role') }}</p>
+                                                            @endif
+                                                        </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- ############################ -->
 
                                             
 
                                             <!-- Modal edycji roli -->
-                                            <div class="modal fade" id="editRoleModal-{{ $role->id }}" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
+                                            <div class="modal modal-lg fade" id="editRoleModal-{{ $role->id }}" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                 <div class="modal-header">
@@ -256,14 +288,32 @@
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label>{{ __('Permissions') }}</label><br>
-                                                        @foreach($permissions as $permission)
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="permission_{{ $permission->id }}" name="permissions[]" value="{{ $permission->id }}" {{ $role->abilities->contains($permission->id) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="permission_{{ $permission->id }}">
-                                                                    {{ $permission->name }}
-                                                                </label>
-                                                            </div>
-                                                        @endforeach
+                                                        <table id="permissionsTable" class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>{{ __('Admit') }}</th> 
+                                                                    <th>{{ __('Name') }}</th>
+                                                                    <th>{{ __('Title') }}</th> 
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($permissions as $permission)
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="form-check form-switch">
+                                                                            <input class="form-check-input permission-checkbox mx-auto" type="checkbox" role="switch" id="flexSwitchCheckDefault{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}" @if($role->abilities->contains('name', $permission->name)) checked @endif>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>{{ $permission->name }}</td>
+                                                                    <td>{{ $permission->title }}</td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="selectAllCheckbox">
+                                                            <label class="form-check-label" for="selectAllCheckbox">{{ __('Grant all of the above permissions to this role') }}</label>
+                                                        </div>
                                                     </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
@@ -285,11 +335,6 @@
                                     @endforelse
                                 </tbody>
                             </table>
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    {{ $roles->links() }}
-                                </ul>
-                            </nav>
                     </div>
                 </div>
             </div>
@@ -337,7 +382,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="createRoleModalLabel">{{ __('Create role') }}</h5>
+        <h5 class="modal-title" id="createRoleModalLabel">{{ __('Create a role') }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -353,13 +398,33 @@
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="permissions">{{ __('Assign permissions to role:') }}</label><br>
-                        @foreach($permissions as $permission)
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}">
-                                <label class="form-check-label" for="permissions">{{ $permission->title }}</label>
-                            </div>
-                        @endforeach
+                    <label>{{ __('Permissions') }}</label><br>
+                    <table id="permissionsTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>{{ __('Admit') }}</th> 
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Title') }}</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($permissions as $permission)
+                            <tr>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input permission-checkboxcreate mx-auto" type="checkbox" role="switch" id="flexSwitchCheckDefaultCreate{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}">
+                                    </div>
+                                </td>
+                                <td>{{ $permission->name }}</td>
+                                <td>{{ $permission->title }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                        <div class="form-check ml-2">
+                            <input class="form-check-input" type="checkbox" id="selectAllCheckboxCreate">
+                            <label class="form-check-label" for="selectAllCheckboxCreate">{{ __('Grant all of the above permissions to this role') }}</label>
+                        </div>
                     </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>

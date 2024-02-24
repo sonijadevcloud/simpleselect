@@ -217,3 +217,50 @@ $(document).ready(function() {
 });
 
 // -----
+
+
+// PAGINACJA TABELI PERMISSIONS
+$(document).ready(function() {
+    $('#permissionsTable').DataTable({
+        paging: true,
+        searching: false,
+        ordering: false,
+        info: false,
+        pageLength: 10
+    });
+});
+// -----
+
+
+// PAGINACJA TABELI PERMISSIONS
+$(document).ready(function() {
+    $('#rolesTable').DataTable({
+        paging: true,
+        searching: false,
+        ordering: false,
+        info: false,
+        pageLength: 10
+    });
+});
+
+//------
+
+$(document).ready(function() {
+    $('#selectAllCheckbox').change(function() {
+        if(this.checked) {
+            $('.permission-checkbox').prop('checked', true);
+        } else {
+            $('.permission-checkbox').prop('checked', false);
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('#selectAllCheckboxCreate').change(function() {
+        if(this.checked) {
+            $('.permission-checkboxcreate').prop('checked', true);
+        } else {
+            $('.permission-checkboxcreate').prop('checked', false);
+        }
+    });
+});
