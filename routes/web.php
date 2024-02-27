@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\AdminPermissionController;
+use App\Http\Controllers\SystemSettingsController;
 
 
 
@@ -44,8 +45,8 @@ Route::post('/2fa', [TwoFactorController::class, 'verify'])->name('2fa.verify');
 // ADMIN ROUTES
 
 Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::resource('users', UserController::class);
-    Route::get('permissions', [AdminPermissionController::class, 'index'])->name('permissions.index');
+    Route::resource('users', UserController::class)->middleware('permissions');
+    Route::get('permissions', [AdminPermissionController::class, 'index'])->name('permissions.index')->middleware('permissions');
     Route::post('permissions', [AdminPermissionController::class, 'storePermission'])->name('permissions.store');
     // Route::get('permissions/create', [AdminPermissionController::class, 'createPermissionForm'])->name('permissions.create');
     // Route::get('permissions/{permission}', [AdminPermissionController::class, 'show'])->name('permissions.show');
@@ -56,6 +57,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('roles/store', [AdminPermissionController::class, 'storeRole'])->name('roles.store');
     Route::delete('roles/{role}', [AdminPermissionController::class, 'destroyRole'])->name('roles.destroy');
     Route::put('roles/{role}/update', [AdminPermissionController::class, 'updateRole'])->name('roles.update');
+    Route::get('systemsettings', [SystemSettingsController::class, 'index'])->name('systemsettings.index')->middleware('permissions');
+    Route::post('systemsettings', [SystemSettingsController::class, 'update'])->name('systemsettings.update');
 });
 
 

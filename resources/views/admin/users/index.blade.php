@@ -25,11 +25,13 @@
                                 <h6 class="lh-1">{{ __('Here you can manage users in the system') }}</h6>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                @can('AdminUsers-W')
                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="bi bi-plus-lg"></i> {{ __('Register new user') }}</button>
+                                @endcan
                             </div>
                         </div>
                             <div class="table-responsive-sm mt-5">
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped table-hover">
                                     <thead class="table-dark">
                                         <tr>
                                         <th scope="col">#</th>
@@ -63,6 +65,7 @@
                                         <td class="text-center">
                                             @if($user->id !== Auth::id())
                                             <!-- Przycisk do edycji usera -->
+                                            @can('AdminUsers-W')
                                             <button class="btn btn-sm btn-secondary" title="{{ __('Edit user`s information') }}" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
@@ -71,8 +74,9 @@
                                             <button class="btn btn-sm btn-warning" title="{{ __('Change user`s password') }}" data-bs-toggle="modal" data-bs-target="#editUserPwModal-{{ $user->id }}">
                                                 <i class="bi bi-key"></i>
                                             </button>
-
+                                            @endcan
                                             <!-- Przycisk do włączania/wyłączania usera -->
+                                            @can('AdminUsers-D')
                                                 @if($user->user_status == 'active')
                                                     <button class="btn btn-sm btn-danger" title="{{ __('Turn off this user') }}" data-bs-toggle="modal" data-bs-target="#turnoffUserModal-{{ $user->id }}">
                                                         <i class="bi bi-power"></i>
@@ -82,6 +86,7 @@
                                                         <i class="bi bi-power"></i>
                                                     </button>
                                                 @endif
+                                            @endcan
                                             @else
                                             <span title="{{ __('If you want to edit your own account information or make password changes - use the user settings for your account or ask another administrator to do it.') }}">{{ __('No actions available') }}</span>
                                             @endif

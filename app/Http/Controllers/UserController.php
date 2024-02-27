@@ -141,24 +141,29 @@ class UserController extends Controller
     // Metoda obsługująca dodawanie nowego użytkownika
     public function store(Request $request)
     {
-        // Walidacja danych wejściowych
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string|max:20',
-            'password' => 'required|string|min:8|confirmed|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/',
-        ]);
+        if (Auth::user()->can('AdminUsers-W')) {
+            // Walidacja danych wejściowych
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'phone' => 'nullable|string|max:20',
+                'password' => 'required|string|min:8|confirmed|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/',
+            ]);
 
-        // Zapis nowego użytkownika
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->password = Hash::make($request->password);
-        $user->save();
+            // Zapis nowego użytkownika
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->password = Hash::make($request->password);
+            $user->save();
 
-        // Przekierowanie po zakończeniu
-        return redirect()->route('users.index')->with('success', 'User has been created successfully.');
+            // Przekierowanie po zakończeniu
+            return redirect()->route('users.index')->with('success', 'User has been created successfully.');
+        } else {
+            // Jeżeli użytkownik nie ma wymaganego uprawnienia, możesz zwrócić 403 Forbidden lub przekierować gdzie indziej
+            abort(403, 'You do not have sufficient authority to perform this action');
+        }
     }
 
     // Metoda wyświetlająca formularz edycji użytkownika
@@ -169,77 +174,75 @@ class UserController extends Controller
 
     // Metoda obsługująca aktualizację danych użytkownika
     public function update(Request $request, User $user)
-{
-    if ($request->has('user_status')) {
-        // Jeśli przekazano nowy status użytkownika, zaktualizuj go
-        $oldStatus = $user->user_status;
-        $user->user_status = $request->user_status;
+    {
+        if (Auth::user()->can('AdminUsers-W')) {
+            if ($request->has('user_status')) {
+                // Jeśli przekazano nowy status użytkownika, zaktualizuj go
+                $oldStatus = $user->user_status;
+                $user->user_status = $request->user_status;
 
-        try {
-            $user->save();
-            $message = $request->user_status == 'active' ? 'User account successfully enabled.' : 'User account successfully disabled.';
-            return redirect()->route('users.index')->with('success', $message);
-        } catch (\Exception $e) {
-            return redirect()->route('users.index')->with('error', 'There was an error updating the user status.');
-        }
-    } elseif ($request->has('password')) {
-        // Walidacja nowego hasła
-        $request->validate([
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*#?&]/',
-            ],
-        ]);
-
-        // Aktualizacja hasła
-        $user->password = Hash::make($request->password);
-
-        try {
-            $user->save();
-            return redirect()->route('users.index')->with('success', 'User information updated successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('users.index')->with('error', 'There was an error updating the user password.');
-        }
-    } else {
-        // Aktualizacja innych danych użytkownika
-        $user->fill($request->except('password'));
-
-        // Przypisanie użytkownika do roli
-        $roleId = $request->input('role_id');
-
-        // Sprawdzenie czy wybrano nową rolę
-        if ($roleId !== null) {
-            // Sprawdź czy rola nie jest pusta
-            if ($roleId != 'no-role') {
-                // Jeśli rola została wybrana, przypisz użytkownika do tej roli
-                $role = Role::find($roleId);
-                if ($role) {
-                    Bouncer::assign($role)->to($user);
+                try {
                     $user->save();
+                    $message = $request->user_status == 'active' ? 'User account successfully enabled.' : 'User account successfully disabled.';
+                    return redirect()->route('users.index')->with('success', $message);
+                } catch (\Exception $e) {
+                    return redirect()->route('users.index')->with('error', 'There was an error updating the user status.');
+                }
+            } elseif ($request->has('password')) {
+                // Walidacja nowego hasła
+                $request->validate([
+                    'password' => [
+                        'required',
+                        'string',
+                        'min:8',
+                        'confirmed',
+                        'regex:/[a-z]/',
+                        'regex:/[A-Z]/',
+                        'regex:/[0-9]/',
+                        'regex:/[@$!%*#?&]/',
+                    ],
+                ]);
+
+                // Aktualizacja hasła
+                $user->password = Hash::make($request->password);
+
+                try {
+                    $user->save();
+                    return redirect()->route('users.index')->with('success', 'User information updated successfully.');
+                } catch (\Exception $e) {
+                    return redirect()->route('users.index')->with('error', 'There was an error updating the user password.');
                 }
             } else {
-                // Jeśli wybrano pustą rolę, usuń wszystkie role użytkownika
-                $assignedRoles = $user->getRoles(); // Pobierz przypisane role użytkownika
-                foreach ($assignedRoles as $assignedRole) {
-                    Bouncer::retract($assignedRole)->from($user); // Wycofaj każdą rolę
+                // Aktualizacja innych danych użytkownika
+                $user->fill($request->except('password'));
+
+                // Przypisanie użytkownika do roli
+                $roleId = $request->input('role_id');
+
+                // Usuń wszystkie poprzednie przypisane role użytkownika
+                $user->roles()->detach();
+
+                // Sprawdzenie czy wybrano nową rolę
+                if ($roleId !== null && $roleId != 'no-role') {
+                    // Jeśli rola została wybrana, przypisz użytkownika do tej roli
+                    $role = Role::find($roleId);
+                    if ($role) {
+                        Bouncer::assign($role)->to($user);
+                    }
+                }
+
+                try {
+                    $user->save();
+                    return redirect()->route('users.index')->with('success', 'User information updated successfully.');
+                } catch (\Exception $e) {
+                    return redirect()->route('users.index')->with('error', 'There was an error updating the user information.');
                 }
             }
-        }
-
-        try {
-            $user->save();
-            return redirect()->route('users.index')->with('success', 'User information updated successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('users.index')->with('error', 'There was an error updating the user information.');
+        } else {
+            // Jeżeli użytkownik nie ma wymaganego uprawnienia, możesz zwrócić 403 Forbidden lub przekierować gdzie indziej
+            abort(403, 'You do not have sufficient authority to perform this action');
         }
     }
-}
 
     // Metoda obsługująca usuwanie użytkownika
     public function destroy(User $user)

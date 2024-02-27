@@ -25,7 +25,9 @@
                                 <h6 class="lh-1">{{ __('Here you can manage permissions in the system. Permissions are defined types of access and permissions, which are then assigned to a role. For example, the ability to read and write notifications. Keep in mind that removing permissions can damage the application`s logic and cause your users a lot of problems in their daily work.') }}</h6>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                @can('AdminPrivilege-W')
                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createPermissionModal"><i class="bi bi-plus-lg"></i> {{ __('Add new permission') }}</button>
+                                @endcan
                             </div>
                         </div>
                             <div class="table-responsive-sm mt-5">
@@ -43,22 +45,26 @@
                                     <tbody class="table-group-divider">
                                      @forelse ($permissions as $index => $permission)
                                         <tr>
-                                        <th scope="row">#{{ $index }}</th>
+                                        <th scope="row">#{{ $index+1 }}</th>
                                         <td>{{ $permission->name }}</td>
                                         <td>{{ $permission->title }}</td>
                                         <td>{{ $permission->created_at }}</td>
                                         <td>{{ $permission->updated_at }}</td>
                                         <td class="text-center">
+                                            @can('AdminPrivilege-W')
                                             <!-- Przycisk do edycji roli -->
                                             <button class="btn btn-sm btn-secondary" title="{{ __('Edit permission') }}" data-bs-toggle="modal" data-bs-target="#editPermissionModal-{{ $permission->id }}">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
+                                            @endcan
 
+                                            @can('AdminPrivilege-D')
                                             <!-- Przycisk do usuwania roli -->
                                             <button class="btn btn-sm btn-danger" title="{{ __('Delete permission') }}" data-bs-toggle="modal" data-bs-target="#deletePermissionModal-{{ $permission->id }}">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
-                                            
+                                            @endcan
+
                                             <!-- Modal usuwania uprawnienia -->
                                             <div class="modal fade" id="deletePermissionModal-{{ $permission->id }}" tabindex="-1" aria-labelledby="deletePermissionModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -160,26 +166,28 @@
                                 <h6 class="lh-1">{{ __('Here you can manage roles in the system. A role is a defined group with information on what users assigned to it can do in the application and what accesses they have. Remember to prudently manage roles and the permissions assigned to them. Careless management can corrupt application logic and cause tweoim users a lot of problems while working.') }}</h6>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                @can('AdminPrivilege-W')
                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createRoleModal"><i class="bi bi-plus-lg"></i> {{ __('Add new role') }}</button>
+                                @endcan
                             </div>
                         </div>
                             <div class="table-responsive-sm mt-5">
                             <table class="table table-bordered table-striped table-hover" id="rolesTable">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">{{ __('Role name') }}</th>
-                                        <th scope="col">{{ __('Role description') }}</th>
+                                        <!-- <th scope="col">#</th> -->
+                                        <th scope="col" style="width: 160px!important;">{{ __('Role name') }}</th>
+                                        <th scope="col" style="width: 20px!important;">{{ __('Role description') }}</th>
                                         <th scope="col">{{ __('Permissions') }}</th>
-                                        <th scope="col">{{ __('Created at') }}</th>
-                                        <th scope="col">{{ __('Updated at') }}</th>
-                                        <th scope="col">{{ __('Actions') }}</th>
+                                        <th scope="col" style="width: 100px;">{{ __('Created at') }}</th>
+                                        <th scope="col" style="width: 100px;">{{ __('Updated at') }}</th>
+                                        <th scope="col" style="width: 160px!important;">{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
                                     @forelse ($roles as $index => $role)
                                         <tr>
-                                            <th scope="row">#{{ $index }}</th>
+                                            <!-- <th scope="row">#{{ $index }}</th> -->
                                             <td>{{ $role->name }}</td>
                                             <td>{{ $role->title }}</td>
                                             <td>
@@ -187,15 +195,17 @@
                                                     $abilitiesCount = $role->abilities->count();
                                                 @endphp
                                                 @foreach ($role->abilities->take(4) as $ability)
-                                                    <small><span class="badge text-bg-primary">{{ $ability->name }}</span></small>
+                                                    <small><span class="badge @if (stripos($ability->name, 'Admin') === 0) text-bg-danger @else text-bg-primary @endif">{{ $ability->name }}</span></small>
                                                 @endforeach
                                                 @if ($abilitiesCount > 4)
                                                     <small><span class="badge text-bg-secondary">+ {{ $abilitiesCount - 4 . ' more'}}</span></small>
                                                 @endif
                                             </td>
-                                            <td>{{ $role->created_at }}</td>
-                                            <td>{{ $role->updated_at }}</td>
+                                            <td title="{{ $role->created_at }}">{{ date('Y-m-d', strtotime($role->created_at)) }}</td>
+                                            <td title="{{ $role->updated_at }}">{{ date('Y-m-d', strtotime($role->updated_at)) }}</td>
                                             <td class="text-center">
+
+                                            @can('AdminPrivilege-W')
                                             <!-- Przycisk do edycji roli -->
                                             <button class="btn btn-sm btn-secondary" title="{{ __('Edit role') }}" data-bs-toggle="modal" data-bs-target="#editRoleModal-{{ $role->id }}">
                                                 <i class="bi bi-pencil-square"></i>
@@ -205,11 +215,14 @@
                                             <button class="btn btn-sm btn-primary" title="{{ __('Show assigned users') }}" data-bs-toggle="modal" data-bs-target="#assignedUsersToRoleModal-{{ $role->id }}">
                                                 <i class="bi bi-people-fill"></i>
                                             </button>
+                                            @endcan
 
+                                            @can('AdminPrivilege-D')
                                             <!-- Przycisk do usuwania roli -->
                                             <button class="btn btn-sm btn-danger" title="{{ __('Delete role') }}" data-bs-toggle="modal" data-bs-target="#deleteRoleModal-{{ $role->id }}">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
+                                            @endcan
                                             
                                             <!-- Modal usuwania roli -->
                                             <div class="modal fade" id="deleteRoleModal-{{ $role->id }}" tabindex="-1" aria-labelledby="deleteRoleModalLabel" aria-hidden="true">
@@ -301,10 +314,10 @@
                                                                 <tr>
                                                                     <td>
                                                                         <div class="form-check form-switch">
-                                                                            <input class="form-check-input permission-checkbox mx-auto" type="checkbox" role="switch" id="flexSwitchCheckDefault{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}" @if($role->abilities->contains('name', $permission->name)) checked @endif>
+                                                                            <input class="form-check-input permission-checkbox" type="checkbox" role="switch" id="flexSwitchCheckDefault{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}" @if($role->abilities->contains('name', $permission->name)) checked @endif>
                                                                         </div>
                                                                     </td>
-                                                                    <td>{{ $permission->name }}</td>
+                                                                    <td class="fw-bold @if (stripos($permission->name, 'Admin') === 0) text-danger @endif">{{ $permission->name }}</td>
                                                                     <td>{{ $permission->title }}</td>
                                                                 </tr>
                                                                 @endforeach
@@ -412,10 +425,10 @@
                             <tr>
                                 <td>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input permission-checkboxcreate mx-auto" type="checkbox" role="switch" id="flexSwitchCheckDefaultCreate{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}">
+                                        <input class="form-check-input permission-checkboxcreate" type="checkbox" role="switch" id="flexSwitchCheckDefaultCreate{{ $permission->id }}" name="permissions[]" value="{{ $permission->name }}">
                                     </div>
                                 </td>
-                                <td>{{ $permission->name }}</td>
+                                <td class="fw-bold @if (stripos($permission->name, 'Admin') === 0) text-danger @endif">{{ $permission->name }}</td>
                                 <td>{{ $permission->title }}</td>
                             </tr>
                             @endforeach

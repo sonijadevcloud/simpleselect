@@ -103,41 +103,286 @@
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav">
+                @if (Auth::check() && 
+                (
+                    Auth::user()->can('Home-R') || 
+                    Auth::user()->can('Home-W') 
+                )
+                )
                 <li class="nav-item px-2">
                 <a class="nav-link nvlss {{ Route::currentRouteName() == 'home' ? 'nvactive' : '' }}" href="{{ route('home') }}"><i class="bi bi-house"></i> {{ __('Home')}}</a>
                 </li>
+                @endif
+
+                @if (Auth::check() && 
+                (
+                    Auth::user()->can('Noticies-R') || 
+                    Auth::user()->can('Noticies-W') || 
+                    Auth::user()->can('Noticies-R') 
+                )
+                )
                 <li class="nav-item px-2">
                 <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }}" href="#"><i class="bi bi-receipt"></i> {{ __('Notices')}}</a>
                 </li>
+                @endif
+                
+                @if (Auth::check() && 
+                (
+                    Auth::user()->can('Subscriptions-R') || 
+                    Auth::user()->can('Subscriptions-W') || 
+                    Auth::user()->can('Subscriptions-R') 
+                )
+                )
                 <li class="nav-item px-2">
                 <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }}" href="#"><i class="bi bi-suit-heart"></i> {{ __('Subscriptions')}}</a>
                 </li>
+                @endif
+                
+                @if (Auth::check() && 
+                (
+                    Auth::user()->can('Enforcement-R') || 
+                    Auth::user()->can('Enforcement-W') || 
+                    Auth::user()->can('Enforcement-R') 
+                )
+                )
                 <li class="nav-item px-2">
                 <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }}" href="#"><i class="bi bi-bank"></i> {{ __('Enforcement')}}</a>
                 </li>
+                @endif
+
+                @if (Auth::check() && 
+                        (
+                            Auth::user()->can('Rewarding-R') || 
+                            Auth::user()->can('Rewarding-W') || 
+                            Auth::user()->can('Rewarding-D') || 
+                            Auth::user()->can('DailySettlement-R') || 
+                            Auth::user()->can('DailySettlement-W') || 
+                            Auth::user()->can('DailySettlement-D') || 
+                            Auth::user()->can('MonthlyQuarterlySettlement-R') || 
+                            Auth::user()->can('MonthlyQuarterlySettlement-W') || 
+                            Auth::user()->can('MonthlyQuarterlySettlement-D') || 
+                            Auth::user()->can('AnnualSettlement-R') || 
+                            Auth::user()->can('AnnualSettlement-W') || 
+                            Auth::user()->can('AnnualSettlement-D') || 
+                            Auth::user()->can('Documents-R') || 
+                            Auth::user()->can('Documents-W') || 
+                            Auth::user()->can('Documents-D') || 
+                            Auth::user()->can('Reports-R') || 
+                            Auth::user()->can('Reports-W') || 
+                            Auth::user()->can('Reports-D') 
+                        )
+                    )
+                <li class="nav-item px-2 dropdown">
+                    <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-clipboard2-data"></i> {{ __('Accounting & reports')}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><h4 class="dropdown-header pb-3">{{ __('Accounting & reports')}}</h4></li>
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('Rewarding-R') || 
+                            Auth::user()->can('Rewarding-W') || 
+                            Auth::user()->can('Rewarding-R') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-currency-dollar pe-1"></i> {{ __('Rewarding')}}</a></li>
+                        @endif
+
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('DailySettlement-R') || 
+                            Auth::user()->can('DailySettlement-W') || 
+                            Auth::user()->can('DailySettlement-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-calendar-event pe-1"></i> {{ __('Daily settlement')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('MonthlyQuarterlySettlement-R') || 
+                            Auth::user()->can('MonthlyQuarterlySettlement-W') || 
+                            Auth::user()->can('MonthlyQuarterlySettlement-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-calendar2-month pe-1"></i> {{ __('Monthly and quarterly settlement')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('AnnualSettlement-R') || 
+                            Auth::user()->can('AnnualSettlement-W') || 
+                            Auth::user()->can('AnnualSettlement-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-calendar2-x pe-1"></i> {{ __('Annual settlement')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('Documents-R') || 
+                            Auth::user()->can('Documents-W') || 
+                            Auth::user()->can('Documents-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-file-earmark-richtext pe-1"></i> {{ __('Documents and templates')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('Reports-R') || 
+                            Auth::user()->can('Reports-W') || 
+                            Auth::user()->can('Reports-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-graph-up-arrow pe-1"></i> {{ __('Reports')}}</a></li>
+                        @endif
+                    </ul>
+                </li>
+                @endif
+
+                @if (Auth::check() && 
+                        (
+                            Auth::user()->can('PPZMainSettings-R') || 
+                            Auth::user()->can('PPZMainSettings-W') || 
+                            Auth::user()->can('PPZMainSettings-D') || 
+                            Auth::user()->can('PPZDictionaries-R') || 
+                            Auth::user()->can('PPZDictionaries-W') || 
+                            Auth::user()->can('PPZDictionaries-D') || 
+                            Auth::user()->can('PPZControlSettings-R') || 
+                            Auth::user()->can('PPZControlSettings-W') || 
+                            Auth::user()->can('PPZControlSettings-D') || 
+                            Auth::user()->can('PPZIntegration-R') || 
+                            Auth::user()->can('PPZIntegration-W') || 
+                            Auth::user()->can('PPZIntegration-D') 
+                        )
+                    )
                 <li class="nav-item px-2 dropdown">
                     <a class="nav-link nvlss {{ Route::currentRouteName() == '' ? 'nvactive' : '' }} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-p-circle"></i> {{ __('PPZ Settings')}}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-gear-wide-connected"></i> {{ __('Main settings')}}</a></li>
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-journal-text"></i> {{ __('Dictionaries')}}</a></li>
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-phone-vibrate"></i> {{ __('Control settings')}}</a></li>
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-cpu"></i> {{ __('Integration settings')}}</a></li>
+                        <li><h4 class="dropdown-header pb-3">{{ __('PPZ Settings')}}</h4></li>
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('PPZMainSettings-R') || 
+                            Auth::user()->can('PPZMainSettings-W') || 
+                            Auth::user()->can('PPZMainSettings-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-gear-wide-connected pe-1"></i> {{ __('Main settings')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('PPZDictionaries-R') || 
+                            Auth::user()->can('PPZDictionaries-W') || 
+                            Auth::user()->can('PPZDictionaries-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-journal-text pe-1"></i> {{ __('Dictionaries')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('PPZControlSettings-R') || 
+                            Auth::user()->can('PPZControlSettings-W') || 
+                            Auth::user()->can('PPZControlSettings-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-phone-vibrate pe-1"></i> {{ __('Control settings')}}</a></li>
+                        @endif
+
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('PPZIntegration-R') || 
+                            Auth::user()->can('PPZIntegration-W') || 
+                            Auth::user()->can('PPZIntegration-D') 
+                        )
+                        )
+                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-cpu pe-1"></i> {{ __('Integration settings')}}</a></li>
+                        @endif
                     </ul>
                 </li>
+                @endif
+
+                @if (Auth::check() && 
+                        (
+                            Auth::user()->can('AdminSystemSettings-R') || 
+                            Auth::user()->can('AdminSystemSettings-W') || 
+                            Auth::user()->can('AdminSystemSettings-D') || 
+                            Auth::user()->can('AdminUsers-R') || 
+                            Auth::user()->can('AdminUsers-W') || 
+                            Auth::user()->can('AdminUsers-D') || 
+                            Auth::user()->can('AdminPrivilege-R') || 
+                            Auth::user()->can('AdminPrivilege-W') || 
+                            Auth::user()->can('AdminPrivilege-D') || 
+                            Auth::user()->can('AdminIntegration-R') || 
+                            Auth::user()->can('AdminIntegration-W') || 
+                            Auth::user()->can('AdminIntegration-D') || 
+                            Auth::user()->can('AdminSecurity-R') || 
+                            Auth::user()->can('AdminSecurity-W') || 
+                            Auth::user()->can('AdminSecurity-D')
+                        )
+                    )
                 <li class="nav-item px-2 dropdown">
                     <a class="nav-link nvlss {{ Request::is('admin*') ? 'nvactive' : '' }} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-fingerprint"></i> {{ __('Administration')}}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-sliders2-vertical"></i> {{ __('System settings')}}</a></li>
-                        <li><a class="dropdown-item py-2" href="{{ route('users.index') }}"><i class="bi bi-people"></i> {{ __('Users management')}}</a></li>
-                        <li><a class="dropdown-item py-2" href="{{ route('permissions.index') }}"><i class="bi bi-file-earmark-lock"></i> {{ __('Privilege management')}}</a></li>
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-cpu"></i> {{ __('Integration management')}}</a></li>
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-shield-lock"></i> {{ __('Security settings')}}</a></li>
+                        <li><h4 class="dropdown-header pb-3">{{ __('Administration')}}</h4></li>
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('AdminSystemSettings-R') || 
+                            Auth::user()->can('AdminSystemSettings-W') || 
+                            Auth::user()->can('AdminSystemSettings-D') 
+                        )
+                        )
+                            <li><a class="dropdown-item py-2" href="{{ route('systemsettings.index') }}"><i class="bi bi-sliders2-vertical pe-1"></i> {{ __('System settings')}}</a></li>
+                        @endif
+
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('AdminUsers-R') || 
+                            Auth::user()->can('AdminUsers-W') || 
+                            Auth::user()->can('AdminUsers-D') 
+                        )
+                        )
+                            <li><a class="dropdown-item py-2" href="{{ route('users.index') }}"><i class="bi bi-people pe-1"></i> {{ __('Users management')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('AdminPrivilege-R') || 
+                            Auth::user()->can('AdminPrivilege-W') || 
+                            Auth::user()->can('AdminPrivilege-D') 
+                        )
+                        )
+                            <li><a class="dropdown-item py-2" href="{{ route('permissions.index') }}"><i class="bi bi-file-earmark-lock pe-1"></i> {{ __('Privilege management')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('AdminIntegration-R') || 
+                            Auth::user()->can('AdminIntegration-W') || 
+                            Auth::user()->can('AdminIntegration-D') 
+                        )
+                        )
+                            <li><a class="dropdown-item py-2" href="#"><i class="bi bi-cpu pe-1"></i> {{ __('Integration management')}}</a></li>
+                        @endif
+                        
+                        @if (Auth::check() && 
+                        (
+                            Auth::user()->can('AdminSecurity-R') || 
+                            Auth::user()->can('AdminSecurity-W') || 
+                            Auth::user()->can('AdminSecurity-D') 
+                        )
+                        )
+                            <li><a class="dropdown-item py-2" href="#"><i class="bi bi-shield-lock pe-1"></i> {{ __('Security settings')}}</a></li>
+                        @endif
                     </ul>
                 </li>
+                @endif
             </ul>
             </div>
         </div>
