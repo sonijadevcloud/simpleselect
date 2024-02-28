@@ -20,6 +20,13 @@ return new class extends Migration
                 'updated_at' => now(),
             ],
             [
+                'name' => 'app_timezone',
+                'description' => 'Default time zone of the application, which will be taken into account when filling in the date/date and time fields in the application and database',
+                'value' => 'Europe/Warsaw',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'name' => 'license_key',
                 'description' => 'License key to use the application',
                 'value' => '999-99-X9-99-2099-12-31',
@@ -84,8 +91,16 @@ return new class extends Migration
     public function down(): void
     {
         DB::table('system_settings')->whereIn('name', [
-            'AdminSystemSettings-R',
-            'AdminSystemSettings-W',
+            'app_title',
+            'app_timezone',
+            'license_key',
+            'license_validity',
+            'company_name',
+            'company_address',
+            'company_phone',
+            'company_email',
+            'company_website',
+            'company_logo_link',
             ])->delete();
     }
 };

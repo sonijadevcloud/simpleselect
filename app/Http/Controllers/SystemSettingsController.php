@@ -11,6 +11,7 @@ class SystemSettingsController extends Controller
     public function index()
     {
         $ss_app_title = SystemSettings::where('name', 'app_title')->first();
+        $ss_app_timezone = SystemSettings::where('name', 'app_timezone')->first();
         $ss_license_key = SystemSettings::where('name', 'license_key')->first();
         $ss_license_validity = SystemSettings::where('name', 'license_validity')->first();
         $ss_company_name = SystemSettings::where('name', 'company_name')->first();
@@ -21,6 +22,7 @@ class SystemSettingsController extends Controller
         $ss_company_logo_link = SystemSettings::where('name', 'company_logo_link')->first();
         return view('admin.systemsettings.index', compact(
             'ss_app_title',
+            'ss_app_timezone',
             'ss_license_key',
             'ss_license_validity',
             'ss_company_name',

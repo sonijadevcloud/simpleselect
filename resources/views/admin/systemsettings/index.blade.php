@@ -42,12 +42,28 @@
                             </div>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" id="app_title" name="app_title_value" value="{{ $ss_app_title->value }}">
-                                <input type="hidden" class="form-control" id="app_title" name="app_title_previous_value" value="{{ $ss_app_title->value }}">
+                                <input type="hidden" class="form-control" id="app_title_previous_value" name="app_title_previous_value" value="{{ $ss_app_title->value }}">
                                 @if($ss_app_title->previous_value && $ss_app_title->previous_value !== $ss_app_title->value)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia wartość: {{ $ss_app_title->previous_value }}</span><br>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_app_title->previous_value }}</span><br>
                                 @endif
                                 @if($ss_app_title->updated_at != $ss_app_title->created_at)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia aktualizacja: {{ $ss_app_title->updated_at }}</span>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_app_title->updated_at }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row mb-3 mt-5">
+                            <div class="col-sm-5">
+                                <label for="app_timezone" class="form-label fw-bold">{{ __('App timezone') }}</label><br>
+                                <small class="text-muted">{{ __('Default time zone of the application, which will be taken into account when filling in the date/date and time fields in the application and database') }}</small>
+                            </div>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="app_timezone" name="app_timezone_value" value="{{ $ss_app_timezone->value }}">
+                                <input type="hidden" class="form-control" id="app_timezone_previous_value" name="app_timezone_previous_value" value="{{ $ss_app_timezone->value }}">
+                                @if($ss_app_timezone->previous_value && $ss_app_timezone->previous_value !== $ss_app_timezone->value)
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_app_timezone->previous_value }}</span><br>
+                                @endif
+                                @if($ss_app_timezone->updated_at != $ss_app_timezone->created_at)
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_app_timezone->updated_at }}</span>
                                 @endif
                             </div>
                         </div>
@@ -58,12 +74,12 @@
                             </div>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" id="company_name" name="company_name_value" value="{{ $ss_company_name->value }}">
-                                <input type="hidden" class="form-control" id="company_name" name="company_name_previous_value" value="{{ $ss_company_name->value }}">
+                                <input type="hidden" class="form-control" id="company_name_previous_value" name="company_name_previous_value" value="{{ $ss_company_name->value }}">
                                 @if($ss_company_name->previous_value && $ss_company_name->previous_value !== $ss_company_name->value)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia wartość: {{ $ss_company_name->previous_value }}</span><br>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_company_name->previous_value }}</span><br>
                                 @endif
                                 @if($ss_company_name->updated_at != $ss_company_name->created_at)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia aktualizacja: {{ $ss_company_name->updated_at }}</span>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_company_name->updated_at }}</span>
                                 @endif
                             </div>
                         </div>
@@ -74,12 +90,12 @@
                             </div>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" id="company_address" name="company_address_value" value="{{ $ss_company_address->value }}">
-                                <input type="hidden" class="form-control" id="company_address" name="company_address_previous_value" value="{{ $ss_company_address->value }}">
+                                <input type="hidden" class="form-control" id="company_address_previous_value" name="company_address_previous_value" value="{{ $ss_company_address->value }}">
                                 @if($ss_company_address->previous_value && $ss_company_address->previous_value !== $ss_company_address->value)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia wartość: {{ $ss_company_address->previous_value }}</span><br>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_company_address->previous_value }}</span><br>
                                 @endif
                                 @if($ss_company_address->updated_at != $ss_company_address->created_at)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia aktualizacja: {{ $ss_company_address->updated_at }}</span>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_company_address->updated_at }}</span>
                                 @endif
                             </div>
                         </div>
@@ -90,12 +106,12 @@
                             </div>
                             <div class="col-sm-7">
                                 <input type="tel" pattern="[0-9]{9}" class="form-control" id="company_phone" name="company_phone_value" value="{{ $ss_company_phone->value }}">
-                                <input type="hidden" class="form-control" id="company_phone" name="company_phone_previous_value" value="{{ $ss_company_phone->value }}">
+                                <input type="hidden" class="form-control" id="company_phone_previous_value" name="company_phone_previous_value" value="{{ $ss_company_phone->value }}">
                                 @if($ss_company_phone->previous_value && $ss_company_phone->previous_value !== $ss_company_phone->value)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia wartość: {{ $ss_company_phone->previous_value }}</span><br>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_company_phone->previous_value }}</span><br>
                                 @endif
                                 @if($ss_company_phone->updated_at != $ss_company_phone->created_at)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia aktualizacja: {{ $ss_company_phone->updated_at }}</span>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_company_phone->updated_at }}</span>
                                 @endif
                             </div>
                         </div>
@@ -106,12 +122,12 @@
                             </div>
                             <div class="col-sm-7">
                                 <input type="email" class="form-control" id="company_email" name="company_email_value" value="{{ $ss_company_email->value }}">
-                                <input type="hidden" class="form-control" id="company_email" name="company_email_previous_value" value="{{ $ss_company_email->value }}">
+                                <input type="hidden" class="form-control" id="company_email_previous_value" name="company_email_previous_value" value="{{ $ss_company_email->value }}">
                                 @if($ss_company_email->previous_value && $ss_company_email->previous_value !== $ss_company_email->value)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia wartość: {{ $ss_company_email->previous_value }}</span><br>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_company_email->previous_value }}</span><br>
                                 @endif
                                 @if($ss_company_email->updated_at != $ss_company_email->created_at)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia aktualizacja: {{ $ss_company_email->updated_at }}</span>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_company_email->updated_at }}</span>
                                 @endif
                             </div>
                         </div>
@@ -122,12 +138,12 @@
                             </div>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" id="company_website" name="company_website_value" value="{{ $ss_company_website->value }}">
-                                <input type="hidden" class="form-control" id="company_website" name="company_website_previous_value" value="{{ $ss_company_website->value }}">
+                                <input type="hidden" class="form-control" id="company_website_previous_value" name="company_website_previous_value" value="{{ $ss_company_website->value }}">
                                 @if($ss_company_website->previous_value && $ss_company_website->previous_value !== $ss_company_website->value)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia wartość: {{ $ss_company_website->previous_value }}</span><br>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_company_website->previous_value }}</span><br>
                                 @endif
                                 @if($ss_company_website->updated_at != $ss_company_website->created_at)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia aktualizacja: {{ $ss_company_website->updated_at }}</span>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_company_website->updated_at }}</span>
                                 @endif
                             </div>
                         </div>
@@ -138,15 +154,15 @@
                             </div>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control" id="company_logo_link" name="company_logo_link_value" value="{{ $ss_company_logo_link->value }}">
-                                <input type="hidden" class="form-control" id="company_logo_link" name="company_logo_link_previous_value" value="{{ $ss_company_logo_link->value }}">
+                                <input type="hidden" class="form-control" id="company_logo_link_previous_value" name="company_logo_link_previous_value" value="{{ $ss_company_logo_link->value }}">
                                 @if($ss_company_logo_link->previous_value && $ss_company_logo_link->previous_value !== $ss_company_logo_link->value)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia wartość: {{ $ss_company_logo_link->previous_value }}</span><br>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous value:') }} {{ $ss_company_logo_link->previous_value }}</span><br>
                                 @endif
                                 @if($ss_company_logo_link->updated_at != $ss_company_logo_link->created_at)
-                                    <span style="font-size: 10px; color: gray;">Poprzednia aktualizacja: {{ $ss_company_logo_link->updated_at }}</span>
+                                    <span style="font-size: 10px; color: gray;">{{ __('Previous update:') }} {{ $ss_company_logo_link->updated_at }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div><br>
                         <div class="row mb-1 mt-5">
                             <h3 class="fw-bold">{{ __('Additional informations') }}</h3>
                             <hr>
