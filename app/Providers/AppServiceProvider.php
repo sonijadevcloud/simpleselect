@@ -28,10 +28,10 @@ class AppServiceProvider extends ServiceProvider
 
         // Pobierz wartość strefy czasowej z bazy danych
         // $timezone = SystemSettings::where('name', 'app_timezone')->value('value');
-        $apptitle = SystemSettings::where('name', 'app_title')->value('value');
+        // $apptitle = SystemSettings::where('name', 'app_title')->value('value');
 
 
         // Ustaw strefę czasową w konfiguracji Laravela
-        config(['app.title' => $apptitle]);
+        // config(['app.title' => $apptitle]);
     }
 }
