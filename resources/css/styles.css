@@ -6,6 +6,80 @@ body{background-image: url('https://sonija.cloud//img/bgtest.png')!important; ba
 	background: rgb(175, 211, 189);
 }
 
+/* LOGIN PAGE STYLES */
+.sss-login-page{background-color: #F7F9FB!important; background-image: none!important;}
+        .sss-login-page .brand {
+	margin: 40px auto;
+	position: relative;
+	z-index: 1;
+    text-align: center;
+    font-size: 4rem;
+    transition: 0.2s;
+    color: black!important;
+}
+
+.sss-login-page .brand:hover{
+    color: #198754!important;
+    transition: 0.2s;
+}
+
+.sss-login-page .brand img {
+	width: 100%;
+}
+
+.sss-login-page .card-wrapper {
+	width: 400px;
+}
+
+.sss-login-page .card {
+	border-color: transparent;
+	box-shadow: 0 4px 8px rgba(0,0,0,.05);
+}
+
+.sss-login-page .card.fat {
+	padding: 10px;
+}
+
+.sss-login-page .card .card-title {
+	margin-bottom: 30px;
+}
+
+.sss-login-page .form-control {
+	border-width: 2.3px;
+}
+
+.sss-login-page .form-group label {
+	width: 100%;
+}
+
+.sss-login-page .btn.btn-block {
+	padding: 12px 10px;
+}
+
+.sss-login-page .footer {
+	margin: 40px 0;
+	color: #888;
+	text-align: center;
+}
+
+@media screen and (max-width: 425px) {
+	.sss-login-page .card-wrapper {
+		width: 90%;
+		margin: 0 auto;
+	}
+}
+
+@media screen and (max-width: 320px) {
+	.sss-login-page .card.fat {
+		padding: 0;
+	}
+
+	.sss-login-page .card.fat .card-body {
+		padding: 15px;
+	}
+}
+/* **** */
+
 .logo { position: relative; display: flex; align-items: center; width: 200px; font-size: 1.6rem; color: #000000;}
 .sonija { font-family: 'Noto Sans TC', sans-serif;
   font-weight: bold;}

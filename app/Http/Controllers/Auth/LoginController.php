@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
 
 class LoginController extends Controller
 {
@@ -36,17 +39,26 @@ class LoginController extends Controller
 
     protected function sendFailedLoginResponse(Request $request)
     {
-        $status = trans('auth.failed');
-        $user = Auth::getLastAttempted();
-
-        if ($user && ($user->user_status !== 'active')) {
+        $user = User::where('email', $request->email)->first(); // Pobierz użytkownika na podstawie adresu e-mail
+    
+        $status = 'These credentials do not match our records.'; // Domyślny komunikat błędu
+    
+        // Sprawdź status użytkownika
+        if ($user && $user->user_status !== 'active') {
             $status = 'Your account is disabled or blocked. Contact the administrator.';
+            $key = 'email'; // Klucz dla komunikatu błędu pola email
+        } elseif ($user && !Hash::check($request->password, $user->password)) {
+            $status = 'The entered password is incorrect.';
+            $key = 'password'; // Klucz dla komunikatu błędu pola hasła
+        } else {
+            $key = $this->username(); // Klucz dla domyślnego komunikatu błędu
         }
-
+    
         throw ValidationException::withMessages([
-            $this->username() => [$status],
+            $key => [$status],
         ]);
     }
+    
 
     protected function attemptLogin(Request $request)
     {

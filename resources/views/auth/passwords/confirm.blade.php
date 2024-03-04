@@ -1,7 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.loginpage')
 
 @section('content')
-<div class="container">
+<div class="container mt-5">
+                    <a href="{{ url('/') }}">
+					<div class="brand mb-5 margin-auto">
+                        <i class="bi bi-p-square-fill sonijaicon"></i>
+					</div>
+                    </a>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
