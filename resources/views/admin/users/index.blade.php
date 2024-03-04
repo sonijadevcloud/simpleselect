@@ -63,7 +63,9 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($user->id !== Auth::id())
+                                        @if($user->name == 'sysadmin')
+                                            <span class="text-danger fs-6" title="{{ __('Built-in account cannot be edited') }}">{{ __('Built-in account') }}</span>
+                                        @elseif($user->id !== Auth::id())
                                             <!-- Przycisk do edycji usera -->
                                             @can('AdminUsers-W')
                                             <button class="btn btn-sm btn-secondary" title="{{ __('Edit user`s information') }}" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}">

@@ -15,6 +15,11 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class UserController extends Controller
 {
+    private function canEditUser(User $user)
+    {
+        return $user->name !== 'sysadmin';
+    }
+
     // Wyświetlanie formularza ustawień
     public function settings()
     {
@@ -176,67 +181,72 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         if (Auth::user()->can('AdminUsers-W')) {
-            if ($request->has('user_status')) {
-                // Jeśli przekazano nowy status użytkownika, zaktualizuj go
-                $oldStatus = $user->user_status;
-                $user->user_status = $request->user_status;
+            if ($user->name !== 'sysadmin') {
+                if ($request->has('user_status')) {
+                    // Jeśli przekazano nowy status użytkownika, zaktualizuj go
+                    $oldStatus = $user->user_status;
+                    $user->user_status = $request->user_status;
 
-                try {
-                    $user->save();
-                    $message = $request->user_status == 'active' ? 'User account successfully enabled.' : 'User account successfully disabled.';
-                    return redirect()->route('users.index')->with('success', $message);
-                } catch (\Exception $e) {
-                    return redirect()->route('users.index')->with('error', 'There was an error updating the user status.');
-                }
-            } elseif ($request->has('password')) {
-                // Walidacja nowego hasła
-                $request->validate([
-                    'password' => [
-                        'required',
-                        'string',
-                        'min:8',
-                        'confirmed',
-                        'regex:/[a-z]/',
-                        'regex:/[A-Z]/',
-                        'regex:/[0-9]/',
-                        'regex:/[@$!%*#?&]/',
-                    ],
-                ]);
+                    try {
+                        $user->save();
+                        $message = $request->user_status == 'active' ? 'User account successfully enabled.' : 'User account successfully disabled.';
+                        return redirect()->route('users.index')->with('success', $message);
+                    } catch (\Exception $e) {
+                        return redirect()->route('users.index')->with('error', 'There was an error updating the user status.');
+                    }
+                } elseif ($request->has('password')) {
+                    // Walidacja nowego hasła
+                    $request->validate([
+                        'password' => [
+                            'required',
+                            'string',
+                            'min:8',
+                            'confirmed',
+                            'regex:/[a-z]/',
+                            'regex:/[A-Z]/',
+                            'regex:/[0-9]/',
+                            'regex:/[@$!%*#?&]/',
+                        ],
+                    ]);
 
-                // Aktualizacja hasła
-                $user->password = Hash::make($request->password);
+                    // Aktualizacja hasła
+                    $user->password = Hash::make($request->password);
 
-                try {
-                    $user->save();
-                    return redirect()->route('users.index')->with('success', 'User information updated successfully.');
-                } catch (\Exception $e) {
-                    return redirect()->route('users.index')->with('error', 'There was an error updating the user password.');
-                }
-            } else {
-                // Aktualizacja innych danych użytkownika
-                $user->fill($request->except('password'));
+                    try {
+                        $user->save();
+                        return redirect()->route('users.index')->with('success', 'User information updated successfully.');
+                    } catch (\Exception $e) {
+                        return redirect()->route('users.index')->with('error', 'There was an error updating the user password.');
+                    }
+                } else {
+                    // Aktualizacja innych danych użytkownika
+                    $user->fill($request->except('password'));
 
-                // Przypisanie użytkownika do roli
-                $roleId = $request->input('role_id');
+                    // Przypisanie użytkownika do roli
+                    $roleId = $request->input('role_id');
 
-                // Usuń wszystkie poprzednie przypisane role użytkownika
-                $user->roles()->detach();
+                    // Usuń wszystkie poprzednie przypisane role użytkownika
+                    $user->roles()->detach();
 
-                // Sprawdzenie czy wybrano nową rolę
-                if ($roleId !== null && $roleId != 'no-role') {
-                    // Jeśli rola została wybrana, przypisz użytkownika do tej roli
-                    $role = Role::find($roleId);
-                    if ($role) {
-                        Bouncer::assign($role)->to($user);
+                    // Sprawdzenie czy wybrano nową rolę
+                    if ($roleId !== null && $roleId != 'no-role') {
+                        // Jeśli rola została wybrana, przypisz użytkownika do tej roli
+                        $role = Role::find($roleId);
+                        if ($role) {
+                            Bouncer::assign($role)->to($user);
+                        }
+                    }
+
+                    try {
+                        $user->save();
+                        return redirect()->route('users.index')->with('success', 'User information updated successfully.');
+                    } catch (\Exception $e) {
+                        return redirect()->route('users.index')->with('error', 'There was an error updating the user information.');
                     }
                 }
-
-                try {
-                    $user->save();
-                    return redirect()->route('users.index')->with('success', 'User information updated successfully.');
-                } catch (\Exception $e) {
-                    return redirect()->route('users.index')->with('error', 'There was an error updating the user information.');
-                }
+            } else {
+                // Jeśli użytkownik próbuje edytować konto sysadmin, zwróć odpowiedni komunikat
+                return redirect()->route('users.index')->with('error', 'You cannot edit the sysadmin account.');
             }
         } else {
             // Jeżeli użytkownik nie ma wymaganego uprawnienia, możesz zwrócić 403 Forbidden lub przekierować gdzie indziej
