@@ -1,9 +1,14 @@
-@extends('layouts.twofac')
+@extends('layouts.loginpage')
 
 @section('content')
 
 <div class="container mt-5">
     <div class="row justify-content-center">
+                    <a href="{{ url('/') }}">
+					<div class="brand mb-5 margin-auto">
+                        <i class="bi bi-p-square-fill sonijaicon"></i>
+					</div>
+                    </a>
         <div class="col-md-5">
             <div class="card shadow">
                 <div class="card-header bg-dark text-light"><i class="bi bi-google"></i> {{ __('2FA code verification stage during login') }}</div>
