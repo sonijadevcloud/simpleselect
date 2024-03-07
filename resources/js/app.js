@@ -268,7 +268,46 @@ $(document).ready(function() {
 
 
 /* PHONE INPUTS JS */
-$("input").intlTelInput({
-    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.6/js/utils.js"
-  });
+
+function getIp(callback) {
+    fetch('https://ipinfo.io/json?token=<your token>', { headers: { 'Accept': 'application/json' }})
+        .then((resp) => resp.json())
+        .then((data) => {
+            if (data.country) {
+                callback(data.country);
+            } else {
+                callback('pl'); // Ustaw Polskę jako kraj domyślny, jeśli nie uda się uzyskać lokalizacji za pomocą IP
+            }
+        })
+        .catch(() => {
+            callback('pl'); // Ustaw Polskę jako kraj domyślny w przypadku błędu
+        });
+}
+
+// Funkcja inicjująca pole numeru telefonu
+function initializePhoneInput(inputField) {
+    const phoneInput = window.intlTelInput(inputField, {
+        preferredCountries: ["pl", "gb"],
+        initialCountry: "auto",
+        geoIpLookup: getIp,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+
+    // Zdarzenie zmiany kraju
+    inputField.addEventListener("countrychange", function() {
+        const selectedCountryData = phoneInput.getSelectedCountryData();
+        const dialCode = selectedCountryData.dialCode;
+        phoneInput.setNumber('+' + dialCode); // Ustawienie numeru z odpowiednim prefixem
+    });
+}
+
+// Znajdź wszystkie pola numeru telefonu
+const phoneInputFields = document.querySelectorAll(".phone-input-field");
+
+// Iteruj po każdym polu numeru telefonu i zainicjuj je
+phoneInputFields.forEach(function(inputField) {
+    initializePhoneInput(inputField);
+});
+
+
 /* **** */
