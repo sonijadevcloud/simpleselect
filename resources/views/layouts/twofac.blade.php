@@ -68,6 +68,5 @@
     <p>© {{ date('Y') }}. {{ __('All rights reserved for Sonija Dev Cloud') }}.</p>
     <p>{{ __('version') }} {{ config('app.version') }}</p>
     </footer>
-    @include('cookie-consent::index')
 </body>
 </html>
