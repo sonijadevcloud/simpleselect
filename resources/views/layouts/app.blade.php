@@ -398,6 +398,7 @@
     <p>© {{ date('Y') }}. {{ __('All rights reserved for Sonija Dev Cloud') }}.</p>
     <p>{{ __('version') }} {{ config('app.version') }}</p>
     </footer>
+    @include('cookie-consent::index')
     <script>
         // ENABLE TOOLTIPS
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
