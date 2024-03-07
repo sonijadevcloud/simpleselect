@@ -174,3 +174,9 @@ body{background-image: url('https://sonija.cloud//img/bgtest.png')!important; ba
 .nvactive{font-weight: bolder!important; color: #198754!important; border-bottom: 1px solid #198754;}
 
 footer{width: 100%; min-height: 2vh; padding: 10px; display: flex; justify-content: center; align-items: center; margin-top: 5%; color: #a8a8a8; flex-direction: column; line-height: 10px;}
+
+/** COOKIES ALERT STYLES **/
+.cookie-consent{position: absolute; top:0;left:0; width: 100%; min-height: 100%; background-color: #969696e5; display: flex!important; align-items: center; justify-content: center; z-index: 9999999;}
+.cookie-consent .cookiesbox{min-height: 60%!important; max-width: 50%; background-color: #fff; border: 1px solid transparent; border-radius: 12px; padding: 25px!important;}
+
+/** **** **/
