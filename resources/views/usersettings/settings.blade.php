@@ -41,7 +41,7 @@
                                 <small class="text-muted">{{ __('Enter your landline or cell phone number to make it easier to contact you. Enter your phone number without the country prefix and without spcial characters (e.g., 123444838)') }}</small>
                             </div>
                             <div class="col-sm-7">
-                                <input type="tel" pattern="[0-9]{9}" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" placeholder="{{ __('e.g., 123444838') }}">
+                                <input type="tel" pattern="[0-9+()\s-]*" class="form-control phone-input-field" id="phone" name="phone" value="{{ $user->phone }}">
                             </div>
                         </div>
                         <div class="row mb-3 mt-5">

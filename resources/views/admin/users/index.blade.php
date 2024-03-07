@@ -134,8 +134,8 @@
         <input type="email" class="form-control" id="email" name="email" required>
         </div>
         <div class="mb-3">
-        <label for="phone" class="form-label">{{ __('Phone number') }}</label><br><small>{{ __('Format: 123123123') }}</small>
-        <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{9}">
+        <label for="phone" class="form-label">{{ __('Phone number') }}</label><br>
+        <input type="tel" class="form-control phone-input-field" id="phone" name="phone" pattern="[0-9+()\s-]*">
         </div>
         <div class="mb-3">
         <label for="password" class="form-label">{{ __('Password') }}</label>
@@ -185,8 +185,8 @@
                 <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
                 </div>
             <div class="mb-3">
-                <label for="phonae" class="form-label">{{ __('Phone number') }}</label><br><small>{{ __('Format: 123123123') }}</small>
-                <input type="tel" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" pattern="[0-9]{9}" required>
+                <label for="phonee" class="form-label">{{ __('Phone number') }}</label><br>
+                <input type="tel" class="form-control phone-input-field" id="phonee" name="phone" pattern="[0-9+()\s-]*" value="{{ $user->phone }}">
                 </div>
                 <div class="mb-3">
                     <label for="role_id" class="form-label">{{ __('Role') }}</label>
