@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\AdminPermissionController;
 use App\Http\Controllers\SystemSettingsController;
+use App\Http\Controllers\SonijaCookieConsentController;
 
 
 
@@ -61,4 +62,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('systemsettings', [SystemSettingsController::class, 'update'])->name('systemsettings.update');
 });
 
+// COOKIES SONIJA CONSENT ROUTING
+Route::get('/cookie-consent', [SonijaCookieConsentController::class, 'show'])->name('cookie.consent.show');
+Route::post('/cookie-consent/accept', [SonijaCookieConsentController::class, 'accept'])->name('cookie.consent.accept');
+// ////////
 
