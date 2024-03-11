@@ -142,7 +142,8 @@
         <input type="password" class="form-control" id="password" name="password">
         <small id="passwordHelpBlock" class="form-text text-muted mt-4">
             <small id="pwCapitalLetter" class="form-text text-muted" data-text="{{ __('Minimum 1 Capital Letter') }}">• {{ __('Minimum 1 Capital Letter') }}</small><br>
-            <small id="pwOneNumber" class="form-text text-muted" data-text="{{ __('Minimum One number') }}">• {{ __('Minimum One number') }}</small><br>
+            <small id="pwLowercaseLetter" class="form-text text-muted" data-text="{{ __('Minimum 1 lowercase letter') }}">• {{ __('Minimum 1 lowercase letter') }}</small><br>
+            <small id="pwOneNumber" class="form-text text-muted" data-text="{{ __('Minimum 1 number') }}">• {{ __('Minimum 1 number') }}</small><br>
             <small id="pwSpecialChar" class="form-text text-muted" data-text="{{ __('Minimum 1 special character') }}">• {{ __('Minimum 1 special character') }}</small><br>
             <small id="pwEightchar" class="form-text text-muted" data-text="{{ __('Minimum 8 characters length') }}">• {{ __('Minimum 8 characters length') }}</small><br>
         </small>
@@ -230,7 +231,8 @@
                 <input type="password" class="form-control" id="passwordn{{$user->id}}" name="password" required>
                 <small id="passwordHelpBlockn{{$user->id}}" class="form-text text-muted mt-4">
                     <small id="pwCapitalLettern{{$user->id}}" class="form-text text-muted" data-text="{{ __('Minimum 1 Capital Letter') }}">• {{ __('Minimum 1 Capital Letter') }}</small><br>
-                    <small id="pwOneNumbern{{$user->id}}" class="form-text text-muted" data-text="{{ __('Minimum One number') }}">• {{ __('Minimum One number') }}</small><br>
+                    <small id="pwLowercaseLettern{{$user->id}}" class="form-text text-muted" data-text="{{ __('Minimum 1 lowercase letter') }}">• {{ __('Minimum 1 lowercase letter') }}</small><br>
+                    <small id="pwOneNumbern{{$user->id}}" class="form-text text-muted" data-text="{{ __('Minimum 1 number') }}">• {{ __('Minimum 1 number') }}</small><br>
                     <small id="pwSpecialCharn{{$user->id}}" class="form-text text-muted" data-text="{{ __('Minimum 1 special character') }}">• {{ __('Minimum 1 special character') }}</small><br>
                     <small id="pwEightcharn{{$user->id}}" class="form-text text-muted" data-text="{{ __('Minimum 8 characters length') }}">• {{ __('Minimum 8 characters length') }}</small><br>
                 </small>
@@ -256,6 +258,7 @@
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('password_confirmation');
     const capitalLetter = document.getElementById('pwCapitalLetter');
+    const lowercaseLetter = document.getElementById('pwLowercaseLetter');
     const oneNumber = document.getElementById('pwOneNumber');
     const specialChar = document.getElementById('pwSpecialChar');
     const eightChar = document.getElementById('pwEightchar');
@@ -282,10 +285,12 @@
     passwordInput.addEventListener('keyup', function() {
         const value = passwordInput.value;
         const hasCapitalLetter = /[A-Z]/.test(value);
+        const hasLowercaseLetter = /[a-z]/.test(value);
         const hasOneNumber = /[0-9]/.test(value);
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
         const hasEightChar = value.length >= 8;
 
+        updateCriteria(lowercaseLetter, hasLowercaseLetter);
         updateCriteria(capitalLetter, hasCapitalLetter);
         updateCriteria(oneNumber, hasOneNumber);
         updateCriteria(specialChar, hasSpecialChar);
@@ -300,6 +305,17 @@
             capitalLetter.classList.remove('text-success');
             capitalLetter.classList.remove('fw-bold');
             capitalLetter.classList.add('text-muted');
+        }
+
+        // Sprawdzenie małej litery
+        if (hasLowercaseLetter) {
+            lowercaseLetter.classList.add('text-success');
+            lowercaseLetter.classList.add('fw-bold');
+            lowercaseLetter.classList.remove('text-muted');
+        } else {
+            lowercaseLetter.classList.remove('text-success');
+            lowercaseLetter.classList.remove('fw-bold');
+            lowercaseLetter.classList.add('text-muted');
         }
 
         // Sprawdzenie cyfry
@@ -345,6 +361,7 @@
     const passwordInput = document.getElementById('passwordn{{$user->id}}');
     const confirmPasswordInput = document.getElementById('passwordn_confirmation{{$user->id}}');
     const capitalLetter = document.getElementById('pwCapitalLettern{{$user->id}}');
+    const lowercaseLetter = document.getElementById('pwLowercaseLettern{{$user->id}}');
     const oneNumber = document.getElementById('pwOneNumbern{{$user->id}}');
     const specialChar = document.getElementById('pwSpecialCharn{{$user->id}}');
     const eightChar = document.getElementById('pwEightcharn{{$user->id}}');
@@ -371,10 +388,12 @@
     passwordInput.addEventListener('keyup', function() {
         const value = passwordInput.value;
         const hasCapitalLetter = /[A-Z]/.test(value);
+        const hasLowercaseLetter = /[a-z]/.test(value);
         const hasOneNumber = /[0-9]/.test(value);
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
         const hasEightChar = value.length >= 8;
 
+        updateCriteria(lowercaseLetter, hasLowercaseLetter);
         updateCriteria(capitalLetter, hasCapitalLetter);
         updateCriteria(oneNumber, hasOneNumber);
         updateCriteria(specialChar, hasSpecialChar);
@@ -389,6 +408,17 @@
             capitalLetter.classList.remove('text-success');
             capitalLetter.classList.remove('fw-bold');
             capitalLetter.classList.add('text-muted');
+        }
+
+        // Sprawdzenie małej litery
+        if (hasLowercaseLetter) {
+            lowercaseLetter.classList.add('text-success');
+            lowercaseLetter.classList.add('fw-bold');
+            lowercaseLetter.classList.remove('text-muted');
+        } else {
+            lowercaseLetter.classList.remove('text-success');
+            lowercaseLetter.classList.remove('fw-bold');
+            lowercaseLetter.classList.add('text-muted');
         }
 
         // Sprawdzenie cyfry

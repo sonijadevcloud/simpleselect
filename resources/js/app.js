@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const passwordInput = document.getElementById('new_password');
     const confirmPasswordInput = document.getElementById('new_password_confirmation');
     const capitalLetter = document.getElementById('pwCapitalLetter');
+    const lowercaseLetter = document.getElementById('pwLowercaseLetter');
     const oneNumber = document.getElementById('pwOneNumber');
     const specialChar = document.getElementById('pwSpecialChar');
     const eightChar = document.getElementById('pwEightchar');
@@ -31,11 +32,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     passwordInput.addEventListener('keyup', function() {
         const value = passwordInput.value;
         const hasCapitalLetter = /[A-Z]/.test(value);
+        const hasLowercaseLetter = /[a-z]/.test(value);
         const hasOneNumber = /[0-9]/.test(value);
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
         const hasEightChar = value.length >= 8;
 
         updateCriteria(capitalLetter, hasCapitalLetter);
+        updateCriteria(lowercaseLetter, hasLowercaseLetter);
         updateCriteria(oneNumber, hasOneNumber);
         updateCriteria(specialChar, hasSpecialChar);
         updateCriteria(eightChar, hasEightChar);
@@ -49,6 +52,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
             capitalLetter.classList.remove('text-success');
             capitalLetter.classList.remove('fw-bold');
             capitalLetter.classList.add('text-muted');
+        }
+
+        // Sprawdzenie małej litery
+        if (hasLowercaseLetter) {
+            lowercaseLetter.classList.add('text-success');
+            lowercaseLetter.classList.add('fw-bold');
+            lowercaseLetter.classList.remove('text-muted');
+        } else {
+            lowercaseLetter.classList.remove('text-success');
+            lowercaseLetter.classList.remove('fw-bold');
+            lowercaseLetter.classList.add('text-muted');
         }
 
         // Sprawdzenie cyfry

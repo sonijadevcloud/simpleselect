@@ -144,7 +144,8 @@
                         <input type="password" class="form-control" id="new_password" name="new_password" required>
                         <small id="passwordHelpBlock" class="form-text text-muted mt-4">
                             <small id="pwCapitalLetter" class="form-text text-muted" data-text="{{ __('Minimum 1 Capital Letter') }}">• {{ __('Minimum 1 Capital Letter') }}</small><br>
-                            <small id="pwOneNumber" class="form-text text-muted" data-text="{{ __('Minimum One number') }}">• {{ __('Minimum One number') }}</small><br>
+                            <small id="pwLowercaseLetter" class="form-text text-muted" data-text="{{ __('Minimum 1 lowercase letter') }}">• {{ __('Minimum 1 lowercase letter') }}</small><br>
+                            <small id="pwOneNumber" class="form-text text-muted" data-text="{{ __('Minimum 1 number') }}">• {{ __('Minimum 1 number') }}</small><br>
                             <small id="pwSpecialChar" class="form-text text-muted" data-text="{{ __('Minimum 1 special character') }}">• {{ __('Minimum 1 special character') }}</small><br>
                             <small id="pwEightchar" class="form-text text-muted" data-text="{{ __('Minimum 8 characters length') }}">• {{ __('Minimum 8 characters length') }}</small><br>
                         </small>
