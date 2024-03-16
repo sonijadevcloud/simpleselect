@@ -32,7 +32,7 @@
     <p>© {{ date('Y') }}. {{ __('All rights reserved for Sonija Dev Cloud') }}.</p>
     <p>{{ __('version') }} {{ config('app.version') }}</p>
     </footer>
-    @if(!session()->has('cookie_accepted') || session('cookie_accepted') == false)
+    @if(!request()->cookie('cookie_accepted'))
     <div class="cookie-consent">
         <div class="cookiesbox shadow-sm">
                 <div class="card-header mb-4">
